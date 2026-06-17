@@ -25,8 +25,8 @@ export function BudgetPage() {
   );
 
   const [totalInput, setTotalInput] = useState<string>(budgetConfig.totalMaxWeight.toString());
-  const [categoryInputs, setCategoryInputs] = useState<Record<string, string>>(
-    () => Object.fromEntries(budgetConfig.categories.map((c) => [c.category, c.maxWeight.toString()])),
+  const [categoryInputs, setCategoryInputs] = useState<Record<string, string>>(() =>
+    Object.fromEntries(budgetConfig.categories.map((c) => [c.category, c.maxWeight.toString()])),
   );
 
   useEffect(() => {

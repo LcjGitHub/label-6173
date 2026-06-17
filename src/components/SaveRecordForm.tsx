@@ -2,7 +2,12 @@ import { useState, useMemo } from 'react';
 import { Button, InputGroup, Label, FormGroup, Callout } from '@blueprintjs/core';
 import type { GearItem } from '../types';
 import { usePackStore } from '../store/packStore';
-import { formatWeight, getSelectedDetails, calcTotalWeight, calcTotalItemCount } from '../utils/weight';
+import {
+  formatWeight,
+  getSelectedDetails,
+  calcTotalWeight,
+  calcTotalItemCount,
+} from '../utils/weight';
 
 interface SaveRecordFormProps {
   allGear: GearItem[];
@@ -55,9 +60,7 @@ export function SaveRecordForm({ allGear }: SaveRecordFormProps) {
           出行记录已保存！可在「出行记录」页面查看。
         </Callout>
       )}
-      <FormGroup
-        helperText="保存当前勾选的装备清单、总重量、件数和出行信息为一条历史记录"
-      >
+      <FormGroup helperText="保存当前勾选的装备清单、总重量、件数和出行信息为一条历史记录">
         <div className="save-record__row">
           <Label>
             出行名称
@@ -95,7 +98,9 @@ export function SaveRecordForm({ allGear }: SaveRecordFormProps) {
         {errors.length > 0 && (
           <div className="save-record__errors">
             {errors.map((msg, i) => (
-              <div key={i} className="save-record__error">{msg}</div>
+              <div key={i} className="save-record__error">
+                {msg}
+              </div>
             ))}
           </div>
         )}

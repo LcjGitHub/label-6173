@@ -46,11 +46,7 @@ export function ComparePage() {
       <div className="compare-page__selectors">
         <div className="compare-page__selector">
           <label className="compare-page__label">选择模板 A</label>
-          <HTMLSelect
-            fill
-            value={templateAId}
-            onChange={(e) => setTemplateAId(e.target.value)}
-          >
+          <HTMLSelect fill value={templateAId} onChange={(e) => setTemplateAId(e.target.value)}>
             <option value="">请选择模板...</option>
             {templates.map((tpl) => (
               <option key={tpl.id} value={tpl.id}>
@@ -64,11 +60,7 @@ export function ComparePage() {
 
         <div className="compare-page__selector">
           <label className="compare-page__label">选择模板 B</label>
-          <HTMLSelect
-            fill
-            value={templateBId}
-            onChange={(e) => setTemplateBId(e.target.value)}
-          >
+          <HTMLSelect fill value={templateBId} onChange={(e) => setTemplateBId(e.target.value)}>
             <option value="">请选择模板...</option>
             {templates.map((tpl) => (
               <option key={tpl.id} value={tpl.id}>
@@ -79,18 +71,12 @@ export function ComparePage() {
         </div>
       </div>
 
-      {isSameTemplate && (
-        <p className="compare-page__warning">
-          请选择两个不同的模板进行对比
-        </p>
-      )}
+      {isSameTemplate && <p className="compare-page__warning">请选择两个不同的模板进行对比</p>}
 
       {comparisonResult && <TemplateComparison result={comparisonResult} />}
 
       {!isSameTemplate && !comparisonResult && (
-        <p className="compare-page__hint">
-          请在上方选择两个模板进行对比
-        </p>
+        <p className="compare-page__hint">请在上方选择两个模板进行对比</p>
       )}
     </div>
   );

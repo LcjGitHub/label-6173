@@ -29,12 +29,14 @@ export function TemplateComparison({ result }: TemplateComparisonProps) {
     weightDiffText = '两个模板重量相同';
   }
 
-  const renderPanelItem = (detail: typeof templateA.items[0]) => (
+  const renderPanelItem = (detail: (typeof templateA.items)[0]) => (
     <div key={detail.gear.id} className="template-comparison__item">
       <span className="template-comparison__item-name">
         {detail.gear.name}
         {detail.quantity > 1 && (
-          <Tag minimal className="template-comparison__item-quantity">×{detail.quantity}</Tag>
+          <Tag minimal className="template-comparison__item-quantity">
+            ×{detail.quantity}
+          </Tag>
         )}
       </span>
       <span className="template-comparison__item-weight">{formatWeight(detail.totalWeight)}</span>
@@ -49,7 +51,9 @@ export function TemplateComparison({ result }: TemplateComparisonProps) {
             <h3 className="template-comparison__panel-title">{templateA.name}</h3>
             <div className="template-comparison__panel-meta">
               <Tag round>{templateA.itemCount} 件</Tag>
-              <Tag round intent="primary">{formatWeight(templateA.totalWeight)}</Tag>
+              <Tag round intent="primary">
+                {formatWeight(templateA.totalWeight)}
+              </Tag>
             </div>
           </div>
           <div className="template-comparison__panel-content">
@@ -67,7 +71,9 @@ export function TemplateComparison({ result }: TemplateComparisonProps) {
             <h3 className="template-comparison__panel-title">{templateB.name}</h3>
             <div className="template-comparison__panel-meta">
               <Tag round>{templateB.itemCount} 件</Tag>
-              <Tag round intent="primary">{formatWeight(templateB.totalWeight)}</Tag>
+              <Tag round intent="primary">
+                {formatWeight(templateB.totalWeight)}
+              </Tag>
             </div>
           </div>
           <div className="template-comparison__panel-content">
@@ -83,7 +89,7 @@ export function TemplateComparison({ result }: TemplateComparisonProps) {
 
       <div className="template-comparison__summary">
         <h3 className="template-comparison__summary-title">对比汇总</h3>
-        
+
         <div className="template-comparison__summary-row">
           <div className="template-comparison__summary-item">
             <span className="template-comparison__summary-label">重量差值</span>

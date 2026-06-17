@@ -1,10 +1,6 @@
 import { Tag } from '@blueprintjs/core';
 import type { SelectedGearDetail, BudgetConfig } from '../types';
-import {
-  formatWeight,
-  calcTotalBudgetUsage,
-  calcCategoryBudgetUsages,
-} from '../utils/weight';
+import { formatWeight, calcTotalBudgetUsage, calcCategoryBudgetUsages } from '../utils/weight';
 
 interface BudgetDisplayProps {
   /** 已勾选的装备详情列表（包含数量） */
@@ -46,14 +42,9 @@ export function BudgetDisplay({ selectedDetails, budgetConfig }: BudgetDisplayPr
           </span>
         </div>
         <div className="budget-bar__track budget-bar__track--over">
-          <div
-            className={totalBarClass}
-            style={{ width: `${totalPercent}%` }}
-          />
+          <div className={totalBarClass} style={{ width: `${totalPercent}%` }} />
         </div>
-        <div className="budget-display__total-percent">
-          {totalPercent.toFixed(1)}%
-        </div>
+        <div className="budget-display__total-percent">{totalPercent.toFixed(1)}%</div>
       </div>
 
       <div className="budget-display__categories">
@@ -84,10 +75,7 @@ export function BudgetDisplay({ selectedDetails, budgetConfig }: BudgetDisplayPr
                 </span>
               </div>
               <div className="budget-bar__track budget-bar__track--small budget-bar__track--over">
-                <div
-                  className={catBarClass}
-                  style={{ width: `${catPercent}%` }}
-                />
+                <div className={catBarClass} style={{ width: `${catPercent}%` }} />
               </div>
             </div>
           );

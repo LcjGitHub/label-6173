@@ -34,12 +34,7 @@ export function RenameTemplateDialog({
   };
 
   return (
-    <Dialog
-      isOpen={isOpen}
-      title="重命名模板"
-      onClose={onClose}
-      className="rename-template-dialog"
-    >
+    <Dialog isOpen={isOpen} title="重命名模板" onClose={onClose} className="rename-template-dialog">
       <div className="rename-template-dialog__body">
         <Label>
           模板名称

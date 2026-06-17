@@ -8,7 +8,10 @@ export function RecordsPage() {
   const deleteTravelRecord = usePackStore((s) => s.deleteTravelRecord);
 
   const sortedRecords = useMemo(
-    () => [...travelRecords].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+    () =>
+      [...travelRecords].sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      ),
     [travelRecords],
   );
 
@@ -33,11 +36,7 @@ export function RecordsPage() {
       </div>
       <div className="records-page__list">
         {sortedRecords.map((record) => (
-          <RecordCard
-            key={record.id}
-            record={record}
-            onDelete={deleteTravelRecord}
-          />
+          <RecordCard key={record.id} record={record} onDelete={deleteTravelRecord} />
         ))}
       </div>
     </div>

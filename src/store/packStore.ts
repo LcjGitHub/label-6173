@@ -9,11 +9,7 @@ import type {
   SaveRecordFormData,
   SelectedGearEntry,
 } from '../types';
-import {
-  getSelectedDetails,
-  calcTotalWeight,
-  calcTotalItemCount,
-} from '../utils/weight';
+import { getSelectedDetails, calcTotalWeight, calcTotalItemCount } from '../utils/weight';
 
 interface PackState {
   /** 当前勾选的装备列表（包含数量） */
@@ -69,7 +65,16 @@ interface PackState {
 }
 
 const DEFAULT_CATEGORIES = [
-  '住宿', '炊具', '照明', '服装', '安全', '工具', '饮水', '食物', '个护', '电子',
+  '住宿',
+  '炊具',
+  '照明',
+  '服装',
+  '安全',
+  '工具',
+  '饮水',
+  '食物',
+  '个护',
+  '电子',
 ];
 
 const getDefaultBudgetConfig = (): BudgetConfig => ({
@@ -142,9 +147,7 @@ export const usePackStore = create<PackState>()(
         const trimmed = newName.trim();
         if (!trimmed) return;
         set({
-          templates: get().templates.map((t) =>
-            t.id === id ? { ...t, name: trimmed } : t,
-          ),
+          templates: get().templates.map((t) => (t.id === id ? { ...t, name: trimmed } : t)),
         });
       },
 
@@ -182,7 +185,12 @@ export const usePackStore = create<PackState>()(
         set({
           customGear: get().customGear.map((g) =>
             g.id === id
-              ? { ...g, name: data.name.trim(), category: data.category.trim(), weight: data.weight }
+              ? {
+                  ...g,
+                  name: data.name.trim(),
+                  category: data.category.trim(),
+                  weight: data.weight,
+                }
               : g,
           ),
         });
@@ -299,7 +307,12 @@ export const usePackStore = create<PackState>()(
           state.travelRecords = (state.travelRecords as (TravelRecord & OldTravelRecord)[]).map(
             (rec) => {
               const oldItems = (rec as OldTravelRecord).items;
-              if (oldItems && Array.isArray(oldItems) && oldItems.length > 0 && !('gear' in oldItems[0])) {
+              if (
+                oldItems &&
+                Array.isArray(oldItems) &&
+                oldItems.length > 0 &&
+                !('gear' in oldItems[0])
+              ) {
                 const migratedItems = (oldItems as GearItem[]).map((gear) => ({
                   gear,
                   quantity: 1,

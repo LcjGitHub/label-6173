@@ -22,11 +22,7 @@ export function SaveTemplateForm() {
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
         disabled={selectedCount === 0}
       />
-      <Button
-        intent="success"
-        onClick={handleSave}
-        disabled={!name.trim() || selectedCount === 0}
-      >
+      <Button intent="success" onClick={handleSave} disabled={!name.trim() || selectedCount === 0}>
         保存为模板
       </Button>
     </div>

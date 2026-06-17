@@ -17,10 +17,18 @@ interface GearListProps {
 }
 
 /** 装备库勾选列表 */
-export function GearList({ items, selectedIds, onToggle, searchKeyword = '', categoryFilter = '' }: GearListProps) {
+export function GearList({
+  items,
+  selectedIds,
+  onToggle,
+  searchKeyword = '',
+  categoryFilter = '',
+}: GearListProps) {
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
-      const matchSearch = searchKeyword.trim() === '' || item.name.toLowerCase().includes(searchKeyword.trim().toLowerCase());
+      const matchSearch =
+        searchKeyword.trim() === '' ||
+        item.name.toLowerCase().includes(searchKeyword.trim().toLowerCase());
       const matchCategory = categoryFilter === '' || item.category === categoryFilter;
       return matchSearch && matchCategory;
     });
@@ -32,7 +40,9 @@ export function GearList({ items, selectedIds, onToggle, searchKeyword = '', cat
   if (filteredItems.length === 0) {
     return (
       <div className="gear-list">
-        <div className="gear-list__empty" role="status" aria-live="polite">暂无装备</div>
+        <div className="gear-list__empty" role="status" aria-live="polite">
+          暂无装备
+        </div>
       </div>
     );
   }
@@ -51,7 +61,11 @@ export function GearList({ items, selectedIds, onToggle, searchKeyword = '', cat
                   labelElement={
                     <span className="gear-list__label">
                       {item.name}
-                      {item.isCustom && <Tag className="gear-list__custom-tag" minimal intent="warning">自定义</Tag>}
+                      {item.isCustom && (
+                        <Tag className="gear-list__custom-tag" minimal intent="warning">
+                          自定义
+                        </Tag>
+                      )}
                     </span>
                   }
                   onChange={() => onToggle(item.id)}

@@ -86,16 +86,18 @@ export function calcCategoryWeightSummaries(
   const groups = groupDetailsByCategory(details);
   const totalWeight = calcTotalWeight(details);
 
-  return Object.entries(groups).map(([category, categoryDetails]) => {
-    const categoryTotalWeight = calcTotalWeight(categoryDetails);
-    const categoryItemCount = calcTotalItemCount(categoryDetails);
-    return {
-      category,
-      itemCount: categoryItemCount,
-      totalWeight: categoryTotalWeight,
-      weightRatio: totalWeight > 0 ? categoryTotalWeight / totalWeight : 0,
-    };
-  }).sort((a, b) => b.totalWeight - a.totalWeight);
+  return Object.entries(groups)
+    .map(([category, categoryDetails]) => {
+      const categoryTotalWeight = calcTotalWeight(categoryDetails);
+      const categoryItemCount = calcTotalItemCount(categoryDetails);
+      return {
+        category,
+        itemCount: categoryItemCount,
+        totalWeight: categoryTotalWeight,
+        weightRatio: totalWeight > 0 ? categoryTotalWeight / totalWeight : 0,
+      };
+    })
+    .sort((a, b) => b.totalWeight - a.totalWeight);
 }
 
 /**

@@ -1,8 +1,27 @@
 import { useState } from 'react';
-import { Button, InputGroup, HTMLSelect, OverlayToaster, Position, Intent } from '@blueprintjs/core';
+import {
+  Button,
+  InputGroup,
+  HTMLSelect,
+  OverlayToaster,
+  Position,
+  Intent,
+} from '@blueprintjs/core';
 import { usePackStore } from '../store/packStore';
 
-const CATEGORIES = ['住宿', '炊具', '照明', '服装', '安全', '工具', '饮水', '食物', '个护', '电子', '其他'];
+const CATEGORIES = [
+  '住宿',
+  '炊具',
+  '照明',
+  '服装',
+  '安全',
+  '工具',
+  '饮水',
+  '食物',
+  '个护',
+  '电子',
+  '其他',
+];
 
 const toaster = OverlayToaster.create({ position: Position.TOP });
 
@@ -52,7 +71,9 @@ export function CustomGearForm() {
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value)}
         >
           {CATEGORIES.map((c) => (
-            <option key={c} value={c}>{c}</option>
+            <option key={c} value={c}>
+              {c}
+            </option>
           ))}
         </HTMLSelect>
         <InputGroup
@@ -70,7 +91,9 @@ export function CustomGearForm() {
       {currentErrors.length > 0 && (
         <div className="custom-gear-form__errors">
           {currentErrors.map((err, i) => (
-            <div key={i} className="custom-gear-form__error">{err}</div>
+            <div key={i} className="custom-gear-form__error">
+              {err}
+            </div>
           ))}
         </div>
       )}

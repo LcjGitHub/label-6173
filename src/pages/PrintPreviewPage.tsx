@@ -44,12 +44,7 @@ export function PrintPreviewPage() {
         <Button icon="arrow-left" onClick={handleBack}>
           返回打包页
         </Button>
-        <Button
-          intent="primary"
-          icon="print"
-          onClick={handlePrint}
-          disabled={!hasItems}
-        >
+        <Button intent="primary" icon="print" onClick={handlePrint} disabled={!hasItems}>
           打印清单
         </Button>
       </div>

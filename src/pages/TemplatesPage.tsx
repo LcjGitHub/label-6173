@@ -1,7 +1,12 @@
 import { useMemo, useState } from 'react';
 import { Button, Tag, OverlayToaster, Position, Intent } from '@blueprintjs/core';
 import { usePackStore } from '../store/packStore';
-import { formatWeight, getTemplateDetails, calcTotalWeight, calcTotalItemCount } from '../utils/weight';
+import {
+  formatWeight,
+  getTemplateDetails,
+  calcTotalWeight,
+  calcTotalItemCount,
+} from '../utils/weight';
 import { useAllGear } from '../hooks/useAllGear';
 import { RenameTemplateDialog } from '../components/RenameTemplateDialog';
 
@@ -50,7 +55,9 @@ export function TemplatesPage() {
               <h3 className="template-card__name">{tpl.name}</h3>
               <div className="template-card__meta">
                 <Tag round>{tpl.itemCount} 件</Tag>
-                <Tag round intent="primary">{formatWeight(tpl.totalWeight)}</Tag>
+                <Tag round intent="primary">
+                  {formatWeight(tpl.totalWeight)}
+                </Tag>
               </div>
             </div>
             <p className="template-card__date">

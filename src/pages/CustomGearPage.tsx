@@ -69,9 +69,7 @@ export function CustomGearPage() {
         onCancel={() => setDeleteTarget(null)}
         onConfirm={handleDeleteConfirm}
       >
-        <p>
-          确定要删除自定义装备「{deleteTarget?.name}」吗？该装备将从所有已保存模板中同步移除。
-        </p>
+        <p>确定要删除自定义装备「{deleteTarget?.name}」吗？该装备将从所有已保存模板中同步移除。</p>
       </Alert>
     </div>
   );

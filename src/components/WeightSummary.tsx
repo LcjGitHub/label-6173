@@ -1,6 +1,11 @@
 import { Tag } from '@blueprintjs/core';
 import type { SelectedGearDetail } from '../types';
-import { formatWeight, calcTotalWeight, calcTotalItemCount, calcCategoryWeightSummaries } from '../utils/weight';
+import {
+  formatWeight,
+  calcTotalWeight,
+  calcTotalItemCount,
+  calcCategoryWeightSummaries,
+} from '../utils/weight';
 
 interface WeightSummaryProps {
   /** 已选装备详情列表（包含数量） */
@@ -25,11 +30,15 @@ export function WeightSummary({ selectedDetails, maxWeight }: WeightSummaryProps
     <div className={`weight-summary${isOverWeight ? ' weight-summary--over' : ''}`}>
       <div className="weight-summary__header">
         <span className="weight-summary__title">打包汇总</span>
-        <Tag round intent="primary">{count} 件</Tag>
+        <Tag round intent="primary">
+          {count} 件
+        </Tag>
       </div>
       <div className="weight-summary__total">
         <span className="weight-summary__label">总重量</span>
-        <span className={`weight-summary__value${isOverWeight ? ' weight-summary__value--over' : ''}`}>
+        <span
+          className={`weight-summary__value${isOverWeight ? ' weight-summary__value--over' : ''}`}
+        >
           {formatWeight(total)}
         </span>
       </div>
@@ -64,11 +73,7 @@ export function WeightSummary({ selectedDetails, maxWeight }: WeightSummaryProps
                       aria-label={`${cat.category}占总重量${percent.toFixed(1)}%`}
                     />
                   </div>
-                  <Tag
-                    round
-                    minimal
-                    className="weight-summary__category-percent"
-                  >
+                  <Tag round minimal className="weight-summary__category-percent">
                     {percent.toFixed(1)}%
                   </Tag>
                 </div>

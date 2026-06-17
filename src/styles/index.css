@@ -6,7 +6,8 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background: #f5f8fa;
   color: #182026;
 }
@@ -39,7 +40,9 @@ body {
   color: #5c7080;
   border-radius: 3px;
   font-size: 14px;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .layout__nav-link:hover {
@@ -207,8 +210,12 @@ body {
 /* 超重警告样式 */
 .weight-summary--over {
   border-color: #c23030;
-  box-shadow: 0 0 0 1px #c23030, 0 0 8px rgba(194, 48, 48, 0.2);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow:
+    0 0 0 1px #c23030,
+    0 0 8px rgba(194, 48, 48, 0.2);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .weight-summary__value--over {
@@ -767,7 +774,9 @@ body {
   height: 100%;
   background: #137cbd;
   border-radius: 6px;
-  transition: width 0.3s ease, background 0.3s ease;
+  transition:
+    width 0.3s ease,
+    background 0.3s ease;
   min-width: 0;
 }
 

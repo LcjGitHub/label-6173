@@ -32,11 +32,7 @@ export function SelectedGearList({ items, onReorder, onQuantityChange }: Selecte
     <DragDropContext onDragEnd={handleDragEnd}>
       <Droppable droppableId="selected-gear">
         {(provided) => (
-          <div
-            className="selected-list"
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-          >
+          <div className="selected-list" ref={provided.innerRef} {...provided.droppableProps}>
             {items.map((detail, index) => (
               <QuantityInputItem
                 key={detail.gear.id}

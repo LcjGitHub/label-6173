@@ -13,10 +13,7 @@ export function RecordCard({ record, onDelete }: RecordCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<TravelRecord | null>(null);
 
-  const itemsByCategory = useMemo(
-    () => groupDetailsByCategory(record.items),
-    [record.items],
-  );
+  const itemsByCategory = useMemo(() => groupDetailsByCategory(record.items), [record.items]);
 
   const categoryItemCounts = useMemo(() => {
     const counts: Record<string, number> = {};
@@ -76,21 +73,15 @@ export function RecordCard({ record, onDelete }: RecordCardProps) {
         <div className="record-card__details">
           <div className="record-card__summary-row">
             <span className="record-card__summary-label">总重量</span>
-            <span className="record-card__summary-value">
-              {formatWeight(record.totalWeight)}
-            </span>
+            <span className="record-card__summary-value">{formatWeight(record.totalWeight)}</span>
           </div>
           <div className="record-card__summary-row">
             <span className="record-card__summary-label">装备件数</span>
-            <span className="record-card__summary-value">
-              {record.itemCount} 件
-            </span>
+            <span className="record-card__summary-value">{record.itemCount} 件</span>
           </div>
           <div className="record-card__summary-row">
             <span className="record-card__summary-label">出行日期</span>
-            <span className="record-card__summary-value">
-              {formatTripDate(record.tripDate)}
-            </span>
+            <span className="record-card__summary-value">{formatTripDate(record.tripDate)}</span>
           </div>
 
           <h4 className="record-card__section-title">装备清单</h4>
@@ -132,9 +123,7 @@ export function RecordCard({ record, onDelete }: RecordCardProps) {
         onCancel={() => setDeleteTarget(null)}
         onConfirm={handleDeleteConfirm}
       >
-        <p>
-          确定要删除出行记录「{deleteTarget?.name}」吗？删除后无法恢复。
-        </p>
+        <p>确定要删除出行记录「{deleteTarget?.name}」吗？删除后无法恢复。</p>
       </Alert>
     </div>
   );

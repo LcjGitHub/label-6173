@@ -68,10 +68,7 @@ export function PackPage() {
     [selectedItems, allGear],
   );
 
-  const totalWeight = useMemo(
-    () => calcTotalWeight(selectedDetails),
-    [selectedDetails],
-  );
+  const totalWeight = useMemo(() => calcTotalWeight(selectedDetails), [selectedDetails]);
 
   /**
    * 超重判断逻辑
@@ -107,7 +104,8 @@ export function PackPage() {
           icon="warning-sign"
           title="重量超出上限"
         >
-          当前总重量 {formatWeight(totalWeight)} 已超过设定上限 {formatWeight(packPageMaxWeight)}，请减少装备或调整上限。
+          当前总重量 {formatWeight(totalWeight)} 已超过设定上限 {formatWeight(packPageMaxWeight)}
+          ，请减少装备或调整上限。
         </Callout>
       )}
       <div className="pack-page__left">
@@ -154,9 +152,7 @@ export function PackPage() {
 
       <div className="pack-page__right">
         <div className="pack-page__section">
-          <label className="pack-page__max-weight-label">
-            重量上限（克）
-          </label>
+          <label className="pack-page__max-weight-label">重量上限（克）</label>
           <InputGroup
             className="pack-page__max-weight-input"
             placeholder="未设置上限"
