@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { GearItem, PackTemplate, CustomGearFormData, BudgetConfig } from '../types';
+import type { GearItem, PackTemplate, CustomGearFormData, BudgetConfig, TravelRecord, SaveRecordFormData } from '../types';
 
 interface PackState {
   /** 当前勾选的装备 ID 列表 */
@@ -11,6 +11,8 @@ interface PackState {
   customGear: GearItem[];
   /** 重量预算配置 */
   budgetConfig: BudgetConfig;
+  /** 出行记录列表 */
+  travelRecords: TravelRecord[];
   /** 勾选/取消勾选装备 */
   toggleGear: (id: string) => void;
   /** 设置勾选列表（用于加载模板） */
@@ -37,6 +39,10 @@ interface PackState {
   setCategoryMaxWeight: (category: string, weight: number) => void;
   /** 重置预算配置为默认值 */
   resetBudgetConfig: () => void;
+  /** 保存出行记录 */
+  saveTravelRecord: (data: SaveRecordFormData, allGear: GearItem[]) => void;
+  /** 删除出行记录 */
+  deleteTravelRecord: (id: string) => void;
 }
 
 const DEFAULT_CATEGORIES = [
@@ -56,6 +62,7 @@ export const usePackStore = create<PackState>()(
       templates: [],
       customGear: [],
       budgetConfig: getDefaultBudgetConfig(),
+      travelRecords: [],
 
       toggleGear: (id) => {
         const { selectedIds } = get();
@@ -164,6 +171,30 @@ export const usePackStore = create<PackState>()(
 
       resetBudgetConfig: () => {
         set({ budgetConfig: getDefaultBudgetConfig() });
+      },
+
+      saveTravelRecord: (data, allGear) => {
+        const trimmedName = data.name.trim();
+        if (!trimmedName || !data.tripDate) return;
+        const selectedIds = get().selectedIds;
+        const selectedItems = selectedIds
+          .map((id) => allGear.find((g) => g.id === id))
+          .filter((g): g is GearItem => g !== undefined);
+        const totalWeight = selectedItems.reduce((sum, g) => sum + g.weight, 0);
+        const record: TravelRecord = {
+          id: `rec-${Date.now()}`,
+          name: trimmedName,
+          tripDate: data.tripDate,
+          items: [...selectedItems],
+          totalWeight,
+          itemCount: selectedItems.length,
+          createdAt: new Date().toISOString(),
+        };
+        set({ travelRecords: [...get().travelRecords, record] });
+      },
+
+      deleteTravelRecord: (id) => {
+        set({ travelRecords: get().travelRecords.filter((r) => r.id !== id) });
       },
     }),
     {

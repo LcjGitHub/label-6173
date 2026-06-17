@@ -7,6 +7,7 @@ import { GearList } from '../components/GearList';
 import { WeightSummary } from '../components/WeightSummary';
 import { SelectedGearList } from '../components/SelectedGearList';
 import { SaveTemplateForm } from '../components/SaveTemplateForm';
+import { SaveRecordForm } from '../components/SaveRecordForm';
 
 const mockGear = gearData as GearItem[];
 
@@ -57,6 +58,11 @@ export function PackPage() {
         <div className="pack-page__section">
           <h3>保存模板</h3>
           <SaveTemplateForm />
+        </div>
+
+        <div className="pack-page__section">
+          <h3>保存出行记录</h3>
+          <SaveRecordForm allGear={allGear} />
         </div>
       </div>
     </div>

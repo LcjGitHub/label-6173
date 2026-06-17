@@ -47,6 +47,14 @@ export function Layout() {
           >
             模板对比
           </NavLink>
+          <NavLink
+            to="/records"
+            className={({ isActive }) =>
+              `layout__nav-link${isActive ? ' layout__nav-link--active' : ''}`
+            }
+          >
+            出行记录
+          </NavLink>
         </nav>
       </header>
       <main className="layout__main">

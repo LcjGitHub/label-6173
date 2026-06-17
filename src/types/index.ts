@@ -83,3 +83,27 @@ export interface TemplateComparisonResult {
   /** 仅模板 B 独有装备 */
   onlyBItems: GearItem[];
 }
+
+/** 出行记录快照 */
+export interface TravelRecord {
+  /** 记录 ID */
+  id: string;
+  /** 出行名称 */
+  name: string;
+  /** 出行日期 */
+  tripDate: string;
+  /** 装备清单快照（完整对象，而非仅 ID） */
+  items: GearItem[];
+  /** 总重量（克） */
+  totalWeight: number;
+  /** 装备件数 */
+  itemCount: number;
+  /** 记录创建时间 */
+  createdAt: string;
+}
+
+/** 保存出行记录表单数据 */
+export interface SaveRecordFormData {
+  name: string;
+  tripDate: string;
+}

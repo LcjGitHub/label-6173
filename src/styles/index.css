@@ -793,3 +793,213 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Records Page */
+.records-page h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.records-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.records-page__count {
+  font-size: 13px;
+  color: #5c7080;
+}
+
+.records-page__empty {
+  color: #738694;
+  font-size: 14px;
+}
+
+.records-page__list {
+  display: grid;
+  gap: 16px;
+}
+
+/* Record Card */
+.record-card {
+  background: #fff;
+  border: 1px solid #d8e1e8;
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.record-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.record-card__header-main {
+  flex: 1;
+}
+
+.record-card__name {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.record-card__meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.record-card__date {
+  font-size: 12px;
+  color: #738694;
+  margin: 0 0 12px;
+}
+
+.record-card__actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.record-card__details {
+  padding-top: 16px;
+  border-top: 1px solid #e1e8ed;
+}
+
+.record-card__summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 14px;
+}
+
+.record-card__summary-label {
+  color: #5c7080;
+}
+
+.record-card__summary-value {
+  font-weight: 600;
+}
+
+.record-card__section-title {
+  margin: 16px 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #5c7080;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.record-card__category {
+  margin-bottom: 16px;
+}
+
+.record-card__category:last-child {
+  margin-bottom: 0;
+}
+
+.record-card__category-title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5c7080;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.record-card__category-count {
+  font-weight: 400;
+}
+
+.record-card__category-items {
+  display: grid;
+  gap: 2px;
+}
+
+.record-card__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.record-card__item-name {
+  font-size: 14px;
+}
+
+.record-card__item-weight {
+  font-size: 13px;
+  color: #738694;
+}
+
+/* Save Record Form */
+.save-record {
+  margin-top: 8px;
+}
+
+.save-record__success {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+}
+
+.save-record__row {
+  margin-bottom: 12px;
+}
+
+.save-record__row .bp5-label {
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.save-record__row .bp5-input-group {
+  width: 100%;
+}
+
+.save-record__summary {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: #f5f8fa;
+  border-radius: 3px;
+}
+
+.save-record__summary-item {
+  font-size: 13px;
+  color: #5c7080;
+}
+
+.save-record__summary-item strong {
+  color: #182026;
+  font-weight: 600;
+}
+
+.save-record .bp5-form-group {
+  margin-bottom: 0;
+}
+
+.save-record .bp5-form-group .bp5-form-helper-text {
+  margin-bottom: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .records-page__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .save-record__summary {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .record-card__meta {
+    flex-wrap: wrap;
+  }
+}
