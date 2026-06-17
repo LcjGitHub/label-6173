@@ -31,6 +31,14 @@ export function Layout() {
           >
             模板管理
           </NavLink>
+          <NavLink
+            to="/budget"
+            className={({ isActive }) =>
+              `layout__nav-link${isActive ? ' layout__nav-link--active' : ''}`
+            }
+          >
+            重量预算
+          </NavLink>
         </nav>
       </header>
       <main className="layout__main">

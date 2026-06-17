@@ -3,6 +3,7 @@ import { Layout } from './components/Layout';
 import { PackPage } from './pages/PackPage';
 import { TemplatesPage } from './pages/TemplatesPage';
 import { CustomGearPage } from './pages/CustomGearPage';
+import { BudgetPage } from './pages/BudgetPage';
 
 /** 根组件：路由配置 */
 export function App() {
@@ -13,6 +14,7 @@ export function App() {
           <Route path="/pack" element={<PackPage />} />
           <Route path="/templates" element={<TemplatesPage />} />
           <Route path="/custom-gear" element={<CustomGearPage />} />
+          <Route path="/budget" element={<BudgetPage />} />
           <Route path="*" element={<Navigate to="/pack" replace />} />
         </Route>
       </Routes>

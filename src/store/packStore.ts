@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { GearItem, PackTemplate, CustomGearFormData } from '../types';
+import type { GearItem, PackTemplate, CustomGearFormData, BudgetConfig } from '../types';
 
 interface PackState {
   /** 当前勾选的装备 ID 列表 */
@@ -9,6 +9,8 @@ interface PackState {
   templates: PackTemplate[];
   /** 自定义装备列表 */
   customGear: GearItem[];
+  /** 重量预算配置 */
+  budgetConfig: BudgetConfig;
   /** 勾选/取消勾选装备 */
   toggleGear: (id: string) => void;
   /** 设置勾选列表（用于加载模板） */
@@ -29,7 +31,22 @@ interface PackState {
   updateCustomGear: (id: string, data: CustomGearFormData) => void;
   /** 删除自定义装备 */
   deleteCustomGear: (id: string) => void;
+  /** 设置总重量预算上限 */
+  setTotalMaxWeight: (weight: number) => void;
+  /** 设置分类重量预算上限 */
+  setCategoryMaxWeight: (category: string, weight: number) => void;
+  /** 重置预算配置为默认值 */
+  resetBudgetConfig: () => void;
 }
+
+const DEFAULT_CATEGORIES = [
+  '住宿', '炊具', '照明', '服装', '安全', '工具', '饮水', '食物', '个护', '电子',
+];
+
+const getDefaultBudgetConfig = (): BudgetConfig => ({
+  totalMaxWeight: 10000,
+  categories: DEFAULT_CATEGORIES.map((cat) => ({ category: cat, maxWeight: 1000 })),
+});
 
 /** 打包状态 store，localStorage 持久化 */
 export const usePackStore = create<PackState>()(
@@ -38,6 +55,7 @@ export const usePackStore = create<PackState>()(
       selectedIds: [],
       templates: [],
       customGear: [],
+      budgetConfig: getDefaultBudgetConfig(),
 
       toggleGear: (id) => {
         const { selectedIds } = get();
@@ -112,6 +130,40 @@ export const usePackStore = create<PackState>()(
             selectedIds: t.selectedIds.filter((sid) => sid !== id),
           })),
         });
+      },
+
+      setTotalMaxWeight: (weight) => {
+        const safeWeight = Math.max(0, weight);
+        set({
+          budgetConfig: {
+            ...get().budgetConfig,
+            totalMaxWeight: safeWeight,
+          },
+        });
+      },
+
+      setCategoryMaxWeight: (category, weight) => {
+        const safeWeight = Math.max(0, weight);
+        const current = get().budgetConfig.categories;
+        const existing = current.find((c) => c.category === category);
+        let newCategories;
+        if (existing) {
+          newCategories = current.map((c) =>
+            c.category === category ? { ...c, maxWeight: safeWeight } : c,
+          );
+        } else {
+          newCategories = [...current, { category, maxWeight: safeWeight }];
+        }
+        set({
+          budgetConfig: {
+            ...get().budgetConfig,
+            categories: newCategories,
+          },
+        });
+      },
+
+      resetBudgetConfig: () => {
+        set({ budgetConfig: getDefaultBudgetConfig() });
       },
     }),
     {

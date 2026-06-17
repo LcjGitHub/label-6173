@@ -1,4 +1,4 @@
-import type { GearItem } from '../types';
+import type { GearItem, BudgetConfig, BudgetUsage, CategoryBudgetUsage } from '../types';
 
 /**
  * 将克数格式化为可读重量字符串
@@ -32,4 +32,49 @@ export function groupByCategory(items: GearItem[]): Record<string, GearItem[]> {
     groups[item.category].push(item);
   }
   return groups;
+}
+
+/**
+ * 计算单个预算的使用情况
+ * @param current - 当前重量
+ * @param budget - 预算上限
+ */
+export function calcBudgetUsage(current: number, budget: number): BudgetUsage {
+  const ratio = budget > 0 ? current / budget : current > 0 ? 1 : 0;
+  return {
+    current,
+    budget,
+    ratio: Math.max(0, ratio),
+    isOver: current > budget && budget > 0,
+  };
+}
+
+/**
+ * 计算总重量预算使用情况
+ * @param items - 已选装备列表
+ * @param config - 预算配置
+ */
+export function calcTotalBudgetUsage(items: GearItem[], config: BudgetConfig): BudgetUsage {
+  const total = calcTotalWeight(items);
+  return calcBudgetUsage(total, config.totalMaxWeight);
+}
+
+/**
+ * 计算各分类的预算使用情况
+ * @param items - 已选装备列表
+ * @param config - 预算配置
+ */
+export function calcCategoryBudgetUsages(
+  items: GearItem[],
+  config: BudgetConfig,
+): CategoryBudgetUsage[] {
+  const groups = groupByCategory(items);
+  return config.categories.map((cat) => {
+    const categoryItems = groups[cat.category] || [];
+    const categoryWeight = calcTotalWeight(categoryItems);
+    return {
+      category: cat.category,
+      ...calcBudgetUsage(categoryWeight, cat.maxWeight),
+    };
+  });
 }
