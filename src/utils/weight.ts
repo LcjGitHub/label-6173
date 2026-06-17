@@ -7,6 +7,7 @@ import type {
   TemplateComparisonResult,
   SelectedGearEntry,
   SelectedGearDetail,
+  CategoryWeightSummary,
 } from '../types';
 
 /**
@@ -81,6 +82,28 @@ export function groupDetailsByCategory(
     groups[detail.gear.category].push(detail);
   }
   return groups;
+}
+
+/**
+ * 计算各分类的重量汇总（考虑数量）
+ * @param details - 已选装备详情列表
+ */
+export function calcCategoryWeightSummaries(
+  details: SelectedGearDetail[],
+): CategoryWeightSummary[] {
+  const groups = groupDetailsByCategory(details);
+  const totalWeight = calcTotalWeightWithQuantity(details);
+
+  return Object.entries(groups).map(([category, categoryDetails]) => {
+    const categoryTotalWeight = calcTotalWeightWithQuantity(categoryDetails);
+    const categoryItemCount = calcTotalItemCount(categoryDetails);
+    return {
+      category,
+      itemCount: categoryItemCount,
+      totalWeight: categoryTotalWeight,
+      weightRatio: totalWeight > 0 ? categoryTotalWeight / totalWeight : 0,
+    };
+  }).sort((a, b) => b.totalWeight - a.totalWeight);
 }
 
 /**

@@ -121,6 +121,18 @@ export interface TravelRecord {
   createdAt: string;
 }
 
+/** 分类重量汇总 */
+export interface CategoryWeightSummary {
+  /** 分类名称 */
+  category: string;
+  /** 分类件数（按数量累加） */
+  itemCount: number;
+  /** 分类总重量（克） */
+  totalWeight: number;
+  /** 分类重量占总重量的比例（0-1） */
+  weightRatio: number;
+}
+
 /** 保存出行记录表单数据 */
 export interface SaveRecordFormData {
   name: string;

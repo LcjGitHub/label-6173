@@ -184,6 +184,69 @@ body {
   color: #137cbd;
 }
 
+.weight-summary__categories {
+  margin-top: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.weight-summary__categories-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #182026;
+  margin-bottom: 8px;
+}
+
+.weight-summary__category {
+  margin-bottom: 8px;
+}
+
+.weight-summary__category:last-child {
+  margin-bottom: 0;
+}
+
+.weight-summary__category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.weight-summary__category-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #182026;
+}
+
+.weight-summary__category-tags {
+  display: flex;
+  gap: 6px;
+}
+
+.weight-summary__category-count {
+  font-size: 11px;
+}
+
+.weight-summary__category-weight {
+  font-size: 11px;
+  min-width: 60px;
+  text-align: right;
+}
+
+.weight-summary__category-progress {
+  height: 6px;
+  background: #ebf1f5;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.weight-summary__category-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #2b95d6 0%, #137cbd 100%);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
 .weight-summary__breakdown {
   margin-top: 12px;
 }
