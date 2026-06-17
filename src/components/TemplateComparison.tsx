@@ -1,6 +1,6 @@
 import { Tag } from '@blueprintjs/core';
 import type { TemplateComparisonResult } from '../types';
-import { formatWeight, groupByCategory } from '../utils/weight';
+import { formatWeight, groupDetailsByCategory } from '../utils/weight';
 
 interface TemplateComparisonProps {
   /** 对比结果 */
@@ -11,8 +11,8 @@ interface TemplateComparisonProps {
 export function TemplateComparison({ result }: TemplateComparisonProps) {
   const { templateA, templateB, weightDiff, commonItems, onlyAItems, onlyBItems } = result;
 
-  const groupsA = groupByCategory(templateA.items);
-  const groupsB = groupByCategory(templateB.items);
+  const groupsA = groupDetailsByCategory(templateA.items);
+  const groupsB = groupDetailsByCategory(templateB.items);
 
   const categoriesA = Object.keys(groupsA);
   const categoriesB = Object.keys(groupsB);
@@ -29,6 +29,18 @@ export function TemplateComparison({ result }: TemplateComparisonProps) {
     weightDiffText = '两个模板重量相同';
   }
 
+  const renderPanelItem = (detail: typeof templateA.items[0]) => (
+    <div key={detail.gear.id} className="template-comparison__item">
+      <span className="template-comparison__item-name">
+        {detail.gear.name}
+        {detail.quantity > 1 && (
+          <Tag minimal className="template-comparison__item-quantity">×{detail.quantity}</Tag>
+        )}
+      </span>
+      <span className="template-comparison__item-weight">{formatWeight(detail.totalWeight)}</span>
+    </div>
+  );
+
   return (
     <div className="template-comparison">
       <div className="template-comparison__panels">
@@ -44,12 +56,7 @@ export function TemplateComparison({ result }: TemplateComparisonProps) {
             {categoriesA.map((category) => (
               <div key={category} className="template-comparison__category">
                 <h4 className="template-comparison__category-title">{category}</h4>
-                {groupsA[category].map((item) => (
-                  <div key={item.id} className="template-comparison__item">
-                    <span className="template-comparison__item-name">{item.name}</span>
-                    <span className="template-comparison__item-weight">{formatWeight(item.weight)}</span>
-                  </div>
-                ))}
+                {groupsA[category].map(renderPanelItem)}
               </div>
             ))}
           </div>
@@ -67,12 +74,7 @@ export function TemplateComparison({ result }: TemplateComparisonProps) {
             {categoriesB.map((category) => (
               <div key={category} className="template-comparison__category">
                 <h4 className="template-comparison__category-title">{category}</h4>
-                {groupsB[category].map((item) => (
-                  <div key={item.id} className="template-comparison__item">
-                    <span className="template-comparison__item-name">{item.name}</span>
-                    <span className="template-comparison__item-weight">{formatWeight(item.weight)}</span>
-                  </div>
-                ))}
+                {groupsB[category].map(renderPanelItem)}
               </div>
             ))}
           </div>
@@ -98,8 +100,9 @@ export function TemplateComparison({ result }: TemplateComparisonProps) {
           <div className="template-comparison__tags">
             {commonItems.length > 0 ? (
               commonItems.map((item) => (
-                <Tag key={item.id} minimal intent="primary">
-                  {item.name}
+                <Tag key={item.gear.id} minimal intent="primary">
+                  {item.gear.name}
+                  {item.quantity > 1 && ` ×${item.quantity}`}
                 </Tag>
               ))
             ) : (
@@ -115,8 +118,9 @@ export function TemplateComparison({ result }: TemplateComparisonProps) {
           <div className="template-comparison__tags">
             {onlyAItems.length > 0 ? (
               onlyAItems.map((item) => (
-                <Tag key={item.id} minimal intent="success">
-                  {item.name}
+                <Tag key={item.gear.id} minimal intent="success">
+                  {item.gear.name}
+                  {item.quantity > 1 && ` ×${item.quantity}`}
                 </Tag>
               ))
             ) : (
@@ -132,8 +136,9 @@ export function TemplateComparison({ result }: TemplateComparisonProps) {
           <div className="template-comparison__tags">
             {onlyBItems.length > 0 ? (
               onlyBItems.map((item) => (
-                <Tag key={item.id} minimal intent="warning">
-                  {item.name}
+                <Tag key={item.gear.id} minimal intent="warning">
+                  {item.gear.name}
+                  {item.quantity > 1 && ` ×${item.quantity}`}
                 </Tag>
               ))
             ) : (

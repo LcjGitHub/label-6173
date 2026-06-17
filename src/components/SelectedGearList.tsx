@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
 import { Tag, InputGroup } from '@blueprintjs/core';
 import type { SelectedGearDetail } from '../types';
@@ -37,44 +38,89 @@ export function SelectedGearList({ items, onReorder, onQuantityChange }: Selecte
             {...provided.droppableProps}
           >
             {items.map((detail, index) => (
-              <Draggable key={detail.gear.id} draggableId={detail.gear.id} index={index}>
-                {(dragProvided, snapshot) => (
-                  <div
-                    className={`selected-list__item${snapshot.isDragging ? ' selected-list__item--dragging' : ''}`}
-                    ref={dragProvided.innerRef}
-                    {...dragProvided.draggableProps}
-                  >
-                    <span className="selected-list__drag-handle" {...dragProvided.dragHandleProps}>
-                      <span className="selected-list__index">{index + 1}</span>
-                    </span>
-                    <span className="selected-list__name">{detail.gear.name}</span>
-                    <div className="selected-list__quantity">
-                      <InputGroup
-                        type="number"
-                        min={1}
-                        value={detail.quantity.toString()}
-                        onChange={(e) => {
-                          const val = parseInt(e.target.value, 10);
-                          if (!isNaN(val) && val >= 1) {
-                            onQuantityChange(detail.gear.id, val);
-                          }
-                        }}
-                        className="selected-list__quantity-input"
-                        small
-                      />
-                      <span className="selected-list__quantity-label">件</span>
-                    </div>
-                    <Tag minimal className="selected-list__weight">
-                      {formatWeight(detail.totalWeight)}
-                    </Tag>
-                  </div>
-                )}
-              </Draggable>
+              <QuantityInputItem
+                key={detail.gear.id}
+                detail={detail}
+                index={index}
+                onQuantityChange={onQuantityChange}
+              />
             ))}
             {provided.placeholder}
           </div>
         )}
       </Droppable>
     </DragDropContext>
+  );
+}
+
+interface QuantityInputItemProps {
+  detail: SelectedGearDetail;
+  index: number;
+  onQuantityChange: (id: string, quantity: number) => void;
+}
+
+function QuantityInputItem({ detail, index, onQuantityChange }: QuantityInputItemProps) {
+  const [localValue, setLocalValue] = useState<string>(detail.quantity.toString());
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!isEditing) {
+      setLocalValue(detail.quantity.toString());
+    }
+  }, [detail.quantity, isEditing]);
+
+  const commitQuantity = () => {
+    setIsEditing(false);
+    const trimmed = localValue.trim();
+    const parsed = parseInt(trimmed, 10);
+    const finalQuantity = isNaN(parsed) || parsed < 1 ? 1 : parsed;
+    setLocalValue(finalQuantity.toString());
+    onQuantityChange(detail.gear.id, finalQuantity);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      (e.target as HTMLInputElement).blur();
+    }
+  };
+
+  return (
+    <Draggable key={detail.gear.id} draggableId={detail.gear.id} index={index}>
+      {(dragProvided, snapshot) => (
+        <div
+          className={`selected-list__item${snapshot.isDragging ? ' selected-list__item--dragging' : ''}`}
+          ref={dragProvided.innerRef}
+          {...dragProvided.draggableProps}
+        >
+          <span className="selected-list__drag-handle" {...dragProvided.dragHandleProps}>
+            <span className="selected-list__index">{index + 1}</span>
+          </span>
+          <span className="selected-list__name">{detail.gear.name}</span>
+          <div className="selected-list__quantity">
+            <InputGroup
+              type="number"
+              min={1}
+              value={localValue}
+              onChange={(e) => {
+                setLocalValue(e.target.value);
+                setIsEditing(true);
+              }}
+              onFocus={() => setIsEditing(true)}
+              onBlur={commitQuantity}
+              onKeyDown={handleKeyDown}
+              className="selected-list__quantity-input"
+              aria-label={`${detail.gear.name}数量`}
+              placeholder="数量"
+              small
+            />
+            <span className="selected-list__quantity-label">件</span>
+          </div>
+          <Tag minimal className="selected-list__weight">
+            {formatWeight(detail.totalWeight)}
+          </Tag>
+        </div>
+      )}
+    </Draggable>
   );
 }

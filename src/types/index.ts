@@ -81,7 +81,7 @@ export interface TemplateComparisonResult {
   templateA: {
     id: string;
     name: string;
-    items: GearItem[];
+    items: SelectedGearDetail[];
     totalWeight: number;
     itemCount: number;
   };
@@ -89,18 +89,18 @@ export interface TemplateComparisonResult {
   templateB: {
     id: string;
     name: string;
-    items: GearItem[];
+    items: SelectedGearDetail[];
     totalWeight: number;
     itemCount: number;
   };
   /** 重量差值（A - B） */
   weightDiff: number;
   /** 两模板共有装备 */
-  commonItems: GearItem[];
+  commonItems: SelectedGearDetail[];
   /** 仅模板 A 独有装备 */
-  onlyAItems: GearItem[];
+  onlyAItems: SelectedGearDetail[];
   /** 仅模板 B 独有装备 */
-  onlyBItems: GearItem[];
+  onlyBItems: SelectedGearDetail[];
 }
 
 /** 出行记录快照 */

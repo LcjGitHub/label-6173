@@ -237,6 +237,7 @@ export const usePackStore = create<PackState>()(
       name: 'camping-pack-storage',
       migrate: (persistedState: unknown, version: number) => {
         const state = persistedState as Record<string, unknown>;
+
         if (version === 0 && state.selectedIds && Array.isArray(state.selectedIds)) {
           const migratedItems = (state.selectedIds as string[]).map((id) => ({
             id,
@@ -260,9 +261,36 @@ export const usePackStore = create<PackState>()(
             });
           }
         }
+
+        if (version < 2 && state.travelRecords && Array.isArray(state.travelRecords)) {
+          interface OldTravelRecord {
+            items?: GearItem[];
+          }
+          state.travelRecords = (state.travelRecords as (TravelRecord & OldTravelRecord)[]).map(
+            (rec) => {
+              const oldItems = (rec as OldTravelRecord).items;
+              if (oldItems && Array.isArray(oldItems) && oldItems.length > 0 && !('gear' in oldItems[0])) {
+                const migratedItems = (oldItems as GearItem[]).map((gear) => ({
+                  gear,
+                  quantity: 1,
+                  totalWeight: gear.weight,
+                }));
+                const totalWeight = migratedItems.reduce((sum, d) => sum + d.totalWeight, 0);
+                return {
+                  ...rec,
+                  items: migratedItems,
+                  totalWeight,
+                  itemCount: migratedItems.length,
+                };
+              }
+              return rec;
+            },
+          );
+        }
+
         return state;
       },
-      version: 1,
+      version: 2,
     },
   ),
 );

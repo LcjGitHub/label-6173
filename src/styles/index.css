@@ -256,7 +256,7 @@ body {
   text-align: right;
 }
 
-/* Weight Summary Quantity */
+/* 重量汇总 - 数量相关样式 */
 .weight-summary__item-name {
   display: flex;
   align-items: center;
@@ -272,7 +272,7 @@ body {
   text-align: right;
 }
 
-/* Record Card Quantity */
+/* 出行记录卡片 - 数量相关样式 */
 .record-card__item-name {
   display: flex;
   align-items: center;
@@ -283,7 +283,7 @@ body {
   font-size: 11px;
 }
 
-/* Print Preview Quantity */
+/* 打印预览 - 数量相关样式 */
 .print-preview__table-col--quantity {
   width: 80px;
   text-align: center;
@@ -291,6 +291,17 @@ body {
 
 .print-preview__quantity {
   text-align: center;
+}
+
+/* 模板对比 - 数量标签样式 */
+.template-comparison__item-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.template-comparison__item-quantity {
+  font-size: 11px;
 }
 
 /* Save Template */

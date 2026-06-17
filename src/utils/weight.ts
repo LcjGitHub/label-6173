@@ -213,34 +213,31 @@ export function compareTemplates(
   const detailsA = getTemplateDetails(templateA, allGear);
   const detailsB = getTemplateDetails(templateB, allGear);
 
-  const itemsA = detailsA.map((d) => d.gear);
-  const itemsB = detailsB.map((d) => d.gear);
-
   const totalWeightA = calcTotalWeightWithQuantity(detailsA);
   const totalWeightB = calcTotalWeightWithQuantity(detailsB);
 
   const itemCountA = calcTotalItemCount(detailsA);
   const itemCountB = calcTotalItemCount(detailsB);
 
-  const idsA = new Set(itemsA.map((i) => i.id));
-  const idsB = new Set(itemsB.map((i) => i.id));
+  const idsA = new Set(detailsA.map((d) => d.gear.id));
+  const idsB = new Set(detailsB.map((d) => d.gear.id));
 
-  const commonItems = itemsA.filter((item) => idsB.has(item.id));
-  const onlyAItems = itemsA.filter((item) => !idsB.has(item.id));
-  const onlyBItems = itemsB.filter((item) => !idsA.has(item.id));
+  const commonItems = detailsA.filter((d) => idsB.has(d.gear.id));
+  const onlyAItems = detailsA.filter((d) => !idsB.has(d.gear.id));
+  const onlyBItems = detailsB.filter((d) => !idsA.has(d.gear.id));
 
   return {
     templateA: {
       id: templateA.id,
       name: templateA.name,
-      items: itemsA,
+      items: detailsA,
       totalWeight: totalWeightA,
       itemCount: itemCountA,
     },
     templateB: {
       id: templateB.id,
       name: templateB.name,
-      items: itemsB,
+      items: detailsB,
       totalWeight: totalWeightB,
       itemCount: itemCountB,
     },
