@@ -184,12 +184,14 @@ body {
   color: #137cbd;
 }
 
+/* 分类统计区域容器 */
 .weight-summary__categories {
   margin-top: 12px;
   padding-bottom: 12px;
   border-bottom: 1px solid #e1e8ed;
 }
 
+/* 分类统计标题 */
 .weight-summary__categories-title {
   font-size: 14px;
   font-weight: 600;
@@ -197,14 +199,17 @@ body {
   margin-bottom: 8px;
 }
 
+/* 单个分类条目 */
 .weight-summary__category {
   margin-bottom: 8px;
 }
 
+/* 最后一个分类条目去除底部间距 */
 .weight-summary__category:last-child {
   margin-bottom: 0;
 }
 
+/* 分类头部（名称 + 标签） */
 .weight-summary__category-header {
   display: flex;
   align-items: center;
@@ -212,39 +217,60 @@ body {
   margin-bottom: 4px;
 }
 
+/* 分类名称 */
 .weight-summary__category-name {
   font-size: 13px;
   font-weight: 500;
   color: #182026;
 }
 
+/* 分类标签容器 */
 .weight-summary__category-tags {
   display: flex;
   gap: 6px;
 }
 
+/* 分类件数标签 */
 .weight-summary__category-count {
   font-size: 11px;
 }
 
+/* 分类重量标签 */
 .weight-summary__category-weight {
   font-size: 11px;
   min-width: 60px;
   text-align: right;
 }
 
+/* 进度条与百分比行容器 */
+.weight-summary__category-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 进度条轨道 */
 .weight-summary__category-progress {
+  flex: 1;
   height: 6px;
   background: #ebf1f5;
   border-radius: 3px;
   overflow: hidden;
 }
 
+/* 进度条填充 */
 .weight-summary__category-progress-bar {
   height: 100%;
   background: linear-gradient(90deg, #2b95d6 0%, #137cbd 100%);
   border-radius: 3px;
   transition: width 0.3s ease;
+}
+
+/* 分类占比百分比标签 */
+.weight-summary__category-percent {
+  font-size: 11px;
+  min-width: 48px;
+  text-align: right;
 }
 
 .weight-summary__breakdown {

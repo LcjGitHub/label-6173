@@ -7,7 +7,11 @@ interface WeightSummaryProps {
   selectedDetails: SelectedGearDetail[];
 }
 
-/** 实时重量汇总面板 */
+/**
+ * 实时重量汇总面板
+ * 展示当前已选装备的总重量、总件数，并按装备分类汇总展示各分类的已选件数、
+ * 分类总重、占总重量的比例及横向进度条，帮助用户直观了解重量分布。
+ */
 export function WeightSummary({ selectedDetails }: WeightSummaryProps) {
   const total = calcTotalWeightWithQuantity(selectedDetails);
   const count = calcTotalItemCount(selectedDetails);
@@ -26,27 +30,45 @@ export function WeightSummary({ selectedDetails }: WeightSummaryProps) {
       {categorySummaries.length > 0 && (
         <div className="weight-summary__categories">
           <div className="weight-summary__categories-title">分类统计</div>
-          {categorySummaries.map((cat) => (
-            <div key={cat.category} className="weight-summary__category">
-              <div className="weight-summary__category-header">
-                <span className="weight-summary__category-name">{cat.category}</span>
-                <div className="weight-summary__category-tags">
-                  <Tag minimal className="weight-summary__category-count">
-                    {cat.itemCount} 件
-                  </Tag>
-                  <Tag minimal className="weight-summary__category-weight">
-                    {formatWeight(cat.totalWeight)}
+          {categorySummaries.map((cat) => {
+            const percent = cat.weightRatio * 100;
+            const displayWidth = Math.max(percent, 2);
+            return (
+              <div key={cat.category} className="weight-summary__category">
+                <div className="weight-summary__category-header">
+                  <span className="weight-summary__category-name">{cat.category}</span>
+                  <div className="weight-summary__category-tags">
+                    <Tag minimal className="weight-summary__category-count">
+                      {cat.itemCount} 件
+                    </Tag>
+                    <Tag minimal className="weight-summary__category-weight">
+                      {formatWeight(cat.totalWeight)}
+                    </Tag>
+                  </div>
+                </div>
+                <div className="weight-summary__category-progress-row">
+                  <div className="weight-summary__category-progress">
+                    <div
+                      className="weight-summary__category-progress-bar"
+                      style={{ width: `${displayWidth}%` }}
+                      role="progressbar"
+                      aria-valuenow={Number(percent.toFixed(1))}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-label={`${cat.category}占总重量${percent.toFixed(1)}%`}
+                    />
+                  </div>
+                  <Tag
+                    round
+                    minimal
+                    className="weight-summary__category-percent"
+                  >
+                    {percent.toFixed(1)}%
                   </Tag>
                 </div>
               </div>
-              <div className="weight-summary__category-progress">
-                <div
-                  className="weight-summary__category-progress-bar"
-                  style={{ width: `${cat.weightRatio * 100}%` }}
-                />
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
       {selectedDetails.length > 0 && (
