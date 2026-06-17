@@ -16,6 +16,14 @@ export function Layout() {
             打包
           </NavLink>
           <NavLink
+            to="/custom-gear"
+            className={({ isActive }) =>
+              `layout__nav-link${isActive ? ' layout__nav-link--active' : ''}`
+            }
+          >
+            自定义装备
+          </NavLink>
+          <NavLink
             to="/templates"
             className={({ isActive }) =>
               `layout__nav-link${isActive ? ' layout__nav-link--active' : ''}`

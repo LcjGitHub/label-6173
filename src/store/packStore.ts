@@ -1,12 +1,14 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { PackTemplate } from '../types';
+import type { GearItem, PackTemplate, CustomGearFormData } from '../types';
 
 interface PackState {
   /** 当前勾选的装备 ID 列表 */
   selectedIds: string[];
   /** 已保存的模板列表 */
   templates: PackTemplate[];
+  /** 自定义装备列表 */
+  customGear: GearItem[];
   /** 勾选/取消勾选装备 */
   toggleGear: (id: string) => void;
   /** 设置勾选列表（用于加载模板） */
@@ -21,6 +23,12 @@ interface PackState {
   deleteTemplate: (id: string) => void;
   /** 加载模板到当前勾选 */
   loadTemplate: (id: string) => void;
+  /** 添加自定义装备 */
+  addCustomGear: (data: CustomGearFormData) => void;
+  /** 更新自定义装备 */
+  updateCustomGear: (id: string, data: CustomGearFormData) => void;
+  /** 删除自定义装备 */
+  deleteCustomGear: (id: string) => void;
 }
 
 /** 打包状态 store，localStorage 持久化 */
@@ -29,6 +37,7 @@ export const usePackStore = create<PackState>()(
     (set, get) => ({
       selectedIds: [],
       templates: [],
+      customGear: [],
 
       toggleGear: (id) => {
         const { selectedIds } = get();
@@ -71,6 +80,34 @@ export const usePackStore = create<PackState>()(
         if (template) {
           set({ selectedIds: [...template.selectedIds] });
         }
+      },
+
+      addCustomGear: (data) => {
+        const item: GearItem = {
+          id: `custom-${Date.now()}`,
+          name: data.name.trim(),
+          category: data.category.trim(),
+          weight: data.weight,
+          isCustom: true,
+        };
+        set({ customGear: [...get().customGear, item] });
+      },
+
+      updateCustomGear: (id, data) => {
+        set({
+          customGear: get().customGear.map((g) =>
+            g.id === id
+              ? { ...g, name: data.name.trim(), category: data.category.trim(), weight: data.weight }
+              : g,
+          ),
+        });
+      },
+
+      deleteCustomGear: (id) => {
+        set({
+          customGear: get().customGear.filter((g) => g.id !== id),
+          selectedIds: get().selectedIds.filter((sid) => sid !== id),
+        });
       },
     }),
     {

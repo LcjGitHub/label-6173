@@ -8,14 +8,16 @@ import { WeightSummary } from '../components/WeightSummary';
 import { SelectedGearList } from '../components/SelectedGearList';
 import { SaveTemplateForm } from '../components/SaveTemplateForm';
 
-const allGear = gearData as GearItem[];
+const mockGear = gearData as GearItem[];
 
-/** 打包页面：装备勾选 + 实时汇总 + 保存模板 */
 export function PackPage() {
   const selectedIds = usePackStore((s) => s.selectedIds);
+  const customGear = usePackStore((s) => s.customGear);
   const toggleGear = usePackStore((s) => s.toggleGear);
   const clearSelection = usePackStore((s) => s.clearSelection);
   const reorderSelected = usePackStore((s) => s.reorderSelected);
+
+  const allGear = useMemo(() => [...mockGear, ...customGear], [customGear]);
 
   const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds]);
 
@@ -24,7 +26,7 @@ export function PackPage() {
       selectedIds
         .map((id) => allGear.find((g) => g.id === id))
         .filter((g): g is GearItem => g !== undefined),
-    [selectedIds],
+    [selectedIds, allGear],
   );
 
   return (

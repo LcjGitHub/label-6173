@@ -4,6 +4,14 @@ export interface GearItem {
   name: string;
   category: string;
   weight: number;
+  isCustom?: boolean;
+}
+
+/** 自定义装备表单数据 */
+export interface CustomGearFormData {
+  name: string;
+  category: string;
+  weight: number;
 }
 
 /** 打包清单模板 */

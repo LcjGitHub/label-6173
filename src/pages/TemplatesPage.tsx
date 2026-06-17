@@ -5,13 +5,15 @@ import type { GearItem } from '../types';
 import { usePackStore } from '../store/packStore';
 import { formatWeight } from '../utils/weight';
 
-const allGear = gearData as GearItem[];
+const mockGear = gearData as GearItem[];
 
-/** 模板管理页面：查看、加载、删除模板 */
 export function TemplatesPage() {
   const templates = usePackStore((s) => s.templates);
+  const customGear = usePackStore((s) => s.customGear);
   const loadTemplate = usePackStore((s) => s.loadTemplate);
   const deleteTemplate = usePackStore((s) => s.deleteTemplate);
+
+  const allGear = useMemo(() => [...mockGear, ...customGear], [customGear]);
 
   const templateDetails = useMemo(
     () =>
@@ -22,7 +24,7 @@ export function TemplatesPage() {
         const totalWeight = items.reduce((sum, g) => sum + g.weight, 0);
         return { ...tpl, items, totalWeight };
       }),
-    [templates],
+    [templates, allGear],
   );
 
   if (templates.length === 0) {

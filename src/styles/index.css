@@ -266,6 +266,71 @@ body {
   gap: 8px;
 }
 
+/* Custom Gear Page */
+.custom-gear-page h2 {
+  margin: 0 0 16px;
+  font-size: 16px;
+}
+
+.custom-gear-page__section {
+  margin-top: 20px;
+}
+
+.custom-gear-page__section h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #5c7080;
+}
+
+.custom-gear-page__empty {
+  color: #738694;
+  font-size: 14px;
+}
+
+.custom-gear-form__row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.custom-gear-form__row .bp5-input-group {
+  flex: 1;
+}
+
+.custom-gear-form__row .bp5-html-select {
+  min-width: 100px;
+}
+
+.custom-gear-page__list {
+  display: grid;
+  gap: 16px;
+}
+
+.custom-gear-page__category {
+  margin-bottom: 12px;
+}
+
+.custom-gear-page__category-title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5c7080;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.custom-gear-page__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.custom-gear-page__item-name {
+  flex: 1;
+  font-size: 14px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .pack-page {
@@ -276,5 +341,9 @@ body {
     flex-direction: column;
     gap: 8px;
     align-items: flex-start;
+  }
+
+  .custom-gear-form__row {
+    flex-wrap: wrap;
   }
 }
