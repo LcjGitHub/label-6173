@@ -1,12 +1,9 @@
 import { useMemo, useState, useEffect } from 'react';
 import { Button, InputGroup, FormGroup } from '@blueprintjs/core';
-import gearData from '../mock/gear.json';
-import type { GearItem } from '../types';
 import { usePackStore } from '../store/packStore';
 import { getSelectedDetails } from '../utils/weight';
+import { useAllGear } from '../hooks/useAllGear';
 import { BudgetDisplay } from '../components/BudgetDisplay';
-
-const mockGear = gearData as GearItem[];
 
 /**
  * 重量预算管理页面
@@ -16,13 +13,11 @@ const mockGear = gearData as GearItem[];
  */
 export function BudgetPage() {
   const selectedItems = usePackStore((s) => s.selectedItems);
-  const customGear = usePackStore((s) => s.customGear);
   const budgetConfig = usePackStore((s) => s.budgetConfig);
   const setTotalMaxWeight = usePackStore((s) => s.setTotalMaxWeight);
   const setCategoryMaxWeight = usePackStore((s) => s.setCategoryMaxWeight);
   const resetBudgetConfig = usePackStore((s) => s.resetBudgetConfig);
-
-  const allGear = useMemo(() => [...mockGear, ...customGear], [customGear]);
+  const allGear = useAllGear();
 
   const selectedDetails = useMemo(
     () => getSelectedDetails(selectedItems, allGear),

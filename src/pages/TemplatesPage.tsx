@@ -1,33 +1,28 @@
 import { useMemo, useState } from 'react';
 import { Button, Tag, OverlayToaster, Position, Intent } from '@blueprintjs/core';
-import gearData from '../mock/gear.json';
-import type { GearItem } from '../types';
 import { usePackStore } from '../store/packStore';
-import { formatWeight, getTemplateDetails, calcTotalWeightWithQuantity, calcTotalItemCount } from '../utils/weight';
+import { formatWeight, getTemplateDetails, calcTotalWeight, calcTotalItemCount } from '../utils/weight';
+import { useAllGear } from '../hooks/useAllGear';
 import { RenameTemplateDialog } from '../components/RenameTemplateDialog';
-
-const mockGear = gearData as GearItem[];
 
 const toaster = OverlayToaster.create({ position: Position.TOP });
 
 /** 模板管理页面：查看、加载、重命名、复制、删除模板 */
 export function TemplatesPage() {
   const templates = usePackStore((s) => s.templates);
-  const customGear = usePackStore((s) => s.customGear);
   const loadTemplate = usePackStore((s) => s.loadTemplate);
   const deleteTemplate = usePackStore((s) => s.deleteTemplate);
   const renameTemplate = usePackStore((s) => s.renameTemplate);
   const copyTemplate = usePackStore((s) => s.copyTemplate);
+  const allGear = useAllGear();
 
   const [renameTarget, setRenameTarget] = useState<{ id: string; name: string } | null>(null);
-
-  const allGear = useMemo(() => [...mockGear, ...customGear], [customGear]);
 
   const templateDetails = useMemo(
     () =>
       templates.map((tpl) => {
         const details = getTemplateDetails(tpl, allGear);
-        const totalWeight = calcTotalWeightWithQuantity(details);
+        const totalWeight = calcTotalWeight(details);
         const itemCount = calcTotalItemCount(details);
         return { ...tpl, details, totalWeight, itemCount };
       }),

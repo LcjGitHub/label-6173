@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { Button, InputGroup, Label, FormGroup, Callout } from '@blueprintjs/core';
 import type { GearItem } from '../types';
 import { usePackStore } from '../store/packStore';
-import { formatWeight, getSelectedDetails, calcTotalWeightWithQuantity, calcTotalItemCount } from '../utils/weight';
+import { formatWeight, getSelectedDetails, calcTotalWeight, calcTotalItemCount } from '../utils/weight';
 
 interface SaveRecordFormProps {
   allGear: GearItem[];
@@ -23,7 +23,7 @@ export function SaveRecordForm({ allGear }: SaveRecordFormProps) {
     [selectedItems, allGear],
   );
 
-  const totalWeight = calcTotalWeightWithQuantity(selectedDetails);
+  const totalWeight = calcTotalWeight(selectedDetails);
   const totalItemCount = calcTotalItemCount(selectedDetails);
 
   const hasNoSelection = selectedItems.length === 0;

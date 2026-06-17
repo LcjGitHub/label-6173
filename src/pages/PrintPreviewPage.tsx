@@ -1,14 +1,11 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@blueprintjs/core';
-import gearData from '../mock/gear.json';
-import type { GearItem } from '../types';
 import { usePackStore } from '../store/packStore';
 import { getSelectedDetails } from '../utils/weight';
+import { useAllGear } from '../hooks/useAllGear';
 import { PrintPreviewLayout } from '../components/PrintPreviewLayout';
 import '../styles/print.css';
-
-const mockGear = gearData as GearItem[];
 
 /**
  * 打印预览页面
@@ -19,10 +16,7 @@ const mockGear = gearData as GearItem[];
 export function PrintPreviewPage() {
   const navigate = useNavigate();
   const selectedItems = usePackStore((s) => s.selectedItems);
-  const customGear = usePackStore((s) => s.customGear);
-
-  /** 所有装备（系统装备 + 自定义装备） */
-  const allGear = useMemo(() => [...mockGear, ...customGear], [customGear]);
+  const allGear = useAllGear();
 
   /** 已选装备详情列表（按拖拽顺序排列，包含数量） */
   const selectedDetails = useMemo(

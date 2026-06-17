@@ -3,7 +3,7 @@ import { Tag } from '@blueprintjs/core';
 import type { SelectedGearDetail } from '../types';
 import {
   formatWeight,
-  calcTotalWeightWithQuantity,
+  calcTotalWeight,
   calcTotalItemCount,
   groupDetailsByCategory,
 } from '../utils/weight';
@@ -45,7 +45,7 @@ export function PrintPreviewLayout({ details }: PrintPreviewLayoutProps) {
     let globalIndex = 0;
     const categorySummaries: CategorySummary[] = [];
     for (const [category, categoryDetails] of Object.entries(groups)) {
-      const categoryWeight = calcTotalWeightWithQuantity(categoryDetails);
+      const categoryWeight = calcTotalWeight(categoryDetails);
       const categoryCount = calcTotalItemCount(categoryDetails);
       categorySummaries.push({
         category,
@@ -59,7 +59,7 @@ export function PrintPreviewLayout({ details }: PrintPreviewLayoutProps) {
 
     return {
       categories: categorySummaries,
-      totalWeight: calcTotalWeightWithQuantity(details),
+      totalWeight: calcTotalWeight(details),
       totalItemCount: calcTotalItemCount(details),
     };
   }, [details]);

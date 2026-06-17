@@ -47,7 +47,7 @@ export function getSelectedDetails(
  * 计算已选装备的总重量（考虑数量）
  * @param details - 已选装备详情列表
  */
-export function calcTotalWeightWithQuantity(details: SelectedGearDetail[]): number {
+export function calcTotalWeight(details: SelectedGearDetail[]): number {
   return details.reduce((sum, d) => sum + d.totalWeight, 0);
 }
 
@@ -57,14 +57,6 @@ export function calcTotalWeightWithQuantity(details: SelectedGearDetail[]): numb
  */
 export function calcTotalItemCount(details: SelectedGearDetail[]): number {
   return details.reduce((sum, d) => sum + d.quantity, 0);
-}
-
-/**
- * 计算装备列表总重量（不带数量，用于兼容旧代码）
- * @param items - 装备列表
- */
-export function calcTotalWeight(items: GearItem[]): number {
-  return items.reduce((sum, item) => sum + item.weight, 0);
 }
 
 /**
@@ -85,17 +77,17 @@ export function groupDetailsByCategory(
 }
 
 /**
- * 计算各分类的重量汇总（考虑数量）
+ * 计算各分类的重量汇总
  * @param details - 已选装备详情列表
  */
 export function calcCategoryWeightSummaries(
   details: SelectedGearDetail[],
 ): CategoryWeightSummary[] {
   const groups = groupDetailsByCategory(details);
-  const totalWeight = calcTotalWeightWithQuantity(details);
+  const totalWeight = calcTotalWeight(details);
 
   return Object.entries(groups).map(([category, categoryDetails]) => {
-    const categoryTotalWeight = calcTotalWeightWithQuantity(categoryDetails);
+    const categoryTotalWeight = calcTotalWeight(categoryDetails);
     const categoryItemCount = calcTotalItemCount(categoryDetails);
     return {
       category,
@@ -104,21 +96,6 @@ export function calcCategoryWeightSummaries(
       weightRatio: totalWeight > 0 ? categoryTotalWeight / totalWeight : 0,
     };
   }).sort((a, b) => b.totalWeight - a.totalWeight);
-}
-
-/**
- * 按分类对装备分组（不带数量，用于兼容旧代码）
- * @param items - 装备列表
- */
-export function groupByCategory(items: GearItem[]): Record<string, GearItem[]> {
-  const groups: Record<string, GearItem[]> = {};
-  for (const item of items) {
-    if (!groups[item.category]) {
-      groups[item.category] = [];
-    }
-    groups[item.category].push(item);
-  }
-  return groups;
 }
 
 /**
@@ -137,41 +114,31 @@ export function calcBudgetUsage(current: number, budget: number): BudgetUsage {
 }
 
 /**
- * 计算总重量预算使用情况（考虑数量）
+ * 计算总重量预算使用情况
  * @param details - 已选装备详情列表
  * @param config - 预算配置
  */
-export function calcTotalBudgetUsageWithQuantity(
+export function calcTotalBudgetUsage(
   details: SelectedGearDetail[],
   config: BudgetConfig,
 ): BudgetUsage {
-  const total = calcTotalWeightWithQuantity(details);
+  const total = calcTotalWeight(details);
   return calcBudgetUsage(total, config.totalMaxWeight);
 }
 
 /**
- * 计算总重量预算使用情况（不带数量，用于兼容旧代码）
- * @param items - 已选装备列表
- * @param config - 预算配置
- */
-export function calcTotalBudgetUsage(items: GearItem[], config: BudgetConfig): BudgetUsage {
-  const total = calcTotalWeight(items);
-  return calcBudgetUsage(total, config.totalMaxWeight);
-}
-
-/**
- * 计算各分类的预算使用情况（考虑数量）
+ * 计算各分类的预算使用情况
  * @param details - 已选装备详情列表
  * @param config - 预算配置
  */
-export function calcCategoryBudgetUsagesWithQuantity(
+export function calcCategoryBudgetUsages(
   details: SelectedGearDetail[],
   config: BudgetConfig,
 ): CategoryBudgetUsage[] {
   const groups = groupDetailsByCategory(details);
   return config.categories.map((cat) => {
     const categoryDetails = groups[cat.category] || [];
-    const categoryWeight = calcTotalWeightWithQuantity(categoryDetails);
+    const categoryWeight = calcTotalWeight(categoryDetails);
     return {
       category: cat.category,
       ...calcBudgetUsage(categoryWeight, cat.maxWeight),
@@ -180,27 +147,7 @@ export function calcCategoryBudgetUsagesWithQuantity(
 }
 
 /**
- * 计算各分类的预算使用情况（不带数量，用于兼容旧代码）
- * @param items - 已选装备列表
- * @param config - 预算配置
- */
-export function calcCategoryBudgetUsages(
-  items: GearItem[],
-  config: BudgetConfig,
-): CategoryBudgetUsage[] {
-  const groups = groupByCategory(items);
-  return config.categories.map((cat) => {
-    const categoryItems = groups[cat.category] || [];
-    const categoryWeight = calcTotalWeight(categoryItems);
-    return {
-      category: cat.category,
-      ...calcBudgetUsage(categoryWeight, cat.maxWeight),
-    };
-  });
-}
-
-/**
- * 根据模板获取装备详情列表（包含数量）
+ * 根据模板获取装备详情列表
  * @param template - 打包模板
  * @param allGear - 所有可用装备（包含自定义装备）
  */
@@ -212,18 +159,7 @@ export function getTemplateDetails(
 }
 
 /**
- * 根据模板 ID 获取装备详情列表（不带数量，用于兼容旧代码）
- * @param template - 打包模板
- * @param allGear - 所有可用装备（包含自定义装备）
- */
-export function getTemplateItems(template: PackTemplate, allGear: GearItem[]): GearItem[] {
-  return template.selectedItems
-    .map((entry) => allGear.find((g) => g.id === entry.id))
-    .filter((g): g is GearItem => g !== undefined);
-}
-
-/**
- * 对比两个模板，返回详细对比结果（考虑数量）
+ * 对比两个模板，返回详细对比结果
  * @param templateA - 模板 A
  * @param templateB - 模板 B
  * @param allGear - 所有可用装备（包含自定义装备）
@@ -236,8 +172,8 @@ export function compareTemplates(
   const detailsA = getTemplateDetails(templateA, allGear);
   const detailsB = getTemplateDetails(templateB, allGear);
 
-  const totalWeightA = calcTotalWeightWithQuantity(detailsA);
-  const totalWeightB = calcTotalWeightWithQuantity(detailsB);
+  const totalWeightA = calcTotalWeight(detailsA);
+  const totalWeightB = calcTotalWeight(detailsB);
 
   const itemCountA = calcTotalItemCount(detailsA);
   const itemCountB = calcTotalItemCount(detailsB);

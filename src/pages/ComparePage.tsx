@@ -1,22 +1,18 @@
 import { useMemo, useState } from 'react';
 import { HTMLSelect } from '@blueprintjs/core';
-import gearData from '../mock/gear.json';
-import type { GearItem, TemplateComparisonResult } from '../types';
+import type { TemplateComparisonResult } from '../types';
 import { usePackStore } from '../store/packStore';
 import { compareTemplates } from '../utils/weight';
+import { useAllGear } from '../hooks/useAllGear';
 import { TemplateComparison } from '../components/TemplateComparison';
-
-const mockGear = gearData as GearItem[];
 
 /** 模板对比页面 */
 export function ComparePage() {
   const templates = usePackStore((s) => s.templates);
-  const customGear = usePackStore((s) => s.customGear);
+  const allGear = useAllGear();
 
   const [templateAId, setTemplateAId] = useState<string>('');
   const [templateBId, setTemplateBId] = useState<string>('');
-
-  const allGear = useMemo(() => [...mockGear, ...customGear], [customGear]);
 
   const isSameTemplate = templateAId && templateBId && templateAId === templateBId;
 

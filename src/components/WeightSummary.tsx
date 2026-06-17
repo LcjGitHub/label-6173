@@ -1,6 +1,6 @@
 import { Tag } from '@blueprintjs/core';
 import type { SelectedGearDetail } from '../types';
-import { formatWeight, calcTotalWeightWithQuantity, calcTotalItemCount, calcCategoryWeightSummaries } from '../utils/weight';
+import { formatWeight, calcTotalWeight, calcTotalItemCount, calcCategoryWeightSummaries } from '../utils/weight';
 
 interface WeightSummaryProps {
   /** 已选装备详情列表（包含数量） */
@@ -16,7 +16,7 @@ interface WeightSummaryProps {
  * 当设置了重量上限且当前总重超过上限时，面板边框和总重量数字会变为警告色。
  */
 export function WeightSummary({ selectedDetails, maxWeight }: WeightSummaryProps) {
-  const total = calcTotalWeightWithQuantity(selectedDetails);
+  const total = calcTotalWeight(selectedDetails);
   const count = calcTotalItemCount(selectedDetails);
   const categorySummaries = calcCategoryWeightSummaries(selectedDetails);
   const isOverWeight = maxWeight !== undefined && maxWeight > 0 && total > maxWeight;

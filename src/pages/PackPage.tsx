@@ -1,17 +1,14 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, InputGroup, HTMLSelect, Callout, Intent } from '@blueprintjs/core';
-import gearData from '../mock/gear.json';
-import type { GearItem } from '../types';
 import { usePackStore } from '../store/packStore';
-import { getSelectedDetails, calcTotalWeightWithQuantity, formatWeight } from '../utils/weight';
+import { getSelectedDetails, calcTotalWeight, formatWeight } from '../utils/weight';
+import { useAllGear } from '../hooks/useAllGear';
 import { GearList } from '../components/GearList';
 import { WeightSummary } from '../components/WeightSummary';
 import { SelectedGearList } from '../components/SelectedGearList';
 import { SaveTemplateForm } from '../components/SaveTemplateForm';
 import { SaveRecordForm } from '../components/SaveRecordForm';
-
-const mockGear = gearData as GearItem[];
 
 /**
  * 打包页面：装备勾选 + 实时汇总 + 保存模板
@@ -25,7 +22,6 @@ const mockGear = gearData as GearItem[];
 export function PackPage() {
   const navigate = useNavigate();
   const selectedItems = usePackStore((s) => s.selectedItems);
-  const customGear = usePackStore((s) => s.customGear);
   /** 打包页专用的重量上限，与预算页配置独立 */
   const packPageMaxWeight = usePackStore((s) => s.packPageMaxWeight);
   const toggleGear = usePackStore((s) => s.toggleGear);
@@ -33,6 +29,7 @@ export function PackPage() {
   const reorderSelected = usePackStore((s) => s.reorderSelected);
   const setQuantity = usePackStore((s) => s.setQuantity);
   const setPackPageMaxWeight = usePackStore((s) => s.setPackPageMaxWeight);
+  const allGear = useAllGear();
 
   /** 装备名称搜索关键词，用于模糊匹配过滤装备列表 */
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -55,8 +52,6 @@ export function PackPage() {
     setMaxWeightInput(packPageMaxWeight > 0 ? packPageMaxWeight.toString() : '');
   }, [packPageMaxWeight]);
 
-  const allGear = useMemo(() => [...mockGear, ...customGear], [customGear]);
-
   /** 从全部装备中提取不重复的分类名列表，用于分类下拉选项 */
   const categoryOptions = useMemo(() => {
     const categories = [...new Set(allGear.map((g) => g.category))];
@@ -74,7 +69,7 @@ export function PackPage() {
   );
 
   const totalWeight = useMemo(
-    () => calcTotalWeightWithQuantity(selectedDetails),
+    () => calcTotalWeight(selectedDetails),
     [selectedDetails],
   );
 

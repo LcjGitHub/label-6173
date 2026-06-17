@@ -8,8 +8,12 @@ import type {
   TravelRecord,
   SaveRecordFormData,
   SelectedGearEntry,
-  SelectedGearDetail,
 } from '../types';
+import {
+  getSelectedDetails,
+  calcTotalWeight,
+  calcTotalItemCount,
+} from '../utils/weight';
 
 interface PackState {
   /** 当前勾选的装备列表（包含数量） */
@@ -233,20 +237,10 @@ export const usePackStore = create<PackState>()(
         const trimmedName = data.name.trim();
         if (!trimmedName || !data.tripDate) return;
         const selectedItems = get().selectedItems;
-        const selectedDetails: SelectedGearDetail[] = selectedItems
-          .map((entry) => {
-            const gear = allGear.find((g) => g.id === entry.id);
-            if (!gear) return null;
-            return {
-              gear,
-              quantity: entry.quantity,
-              totalWeight: gear.weight * entry.quantity,
-            };
-          })
-          .filter((d): d is SelectedGearDetail => d !== null);
+        const selectedDetails = getSelectedDetails(selectedItems, allGear);
 
-        const totalWeight = selectedDetails.reduce((sum, d) => sum + d.totalWeight, 0);
-        const itemCount = selectedDetails.reduce((sum, d) => sum + d.quantity, 0);
+        const totalWeight = calcTotalWeight(selectedDetails);
+        const itemCount = calcTotalItemCount(selectedDetails);
 
         const record: TravelRecord = {
           id: `rec-${Date.now()}`,

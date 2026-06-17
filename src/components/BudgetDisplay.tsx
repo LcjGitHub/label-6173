@@ -2,8 +2,8 @@ import { Tag } from '@blueprintjs/core';
 import type { SelectedGearDetail, BudgetConfig } from '../types';
 import {
   formatWeight,
-  calcTotalBudgetUsageWithQuantity,
-  calcCategoryBudgetUsagesWithQuantity,
+  calcTotalBudgetUsage,
+  calcCategoryBudgetUsages,
 } from '../utils/weight';
 
 interface BudgetDisplayProps {
@@ -20,8 +20,8 @@ interface BudgetDisplayProps {
  * 顶栏状态标签在总重超限或任一分类超限时均显示超限警告。
  */
 export function BudgetDisplay({ selectedDetails, budgetConfig }: BudgetDisplayProps) {
-  const totalUsage = calcTotalBudgetUsageWithQuantity(selectedDetails, budgetConfig);
-  const categoryUsages = calcCategoryBudgetUsagesWithQuantity(selectedDetails, budgetConfig);
+  const totalUsage = calcTotalBudgetUsage(selectedDetails, budgetConfig);
+  const categoryUsages = calcCategoryBudgetUsages(selectedDetails, budgetConfig);
 
   const hasCategoryOver = categoryUsages.some((c) => c.isOver);
   const isAnyOver = totalUsage.isOver || hasCategoryOver;
