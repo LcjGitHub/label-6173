@@ -794,7 +794,7 @@ body {
   }
 }
 
-/* Records Page */
+/* 出行记录页面 */
 .records-page h2 {
   margin: 0;
   font-size: 16px;
@@ -822,7 +822,7 @@ body {
   gap: 16px;
 }
 
-/* Record Card */
+/* 出行记录卡片 */
 .record-card {
   background: #fff;
   border: 1px solid #d8e1e8;
@@ -936,7 +936,7 @@ body {
   color: #738694;
 }
 
-/* Save Record Form */
+/* 保存出行记录表单 */
 .save-record {
   margin-top: 8px;
 }
@@ -986,7 +986,21 @@ body {
   margin-bottom: 12px;
 }
 
-/* Responsive */
+.save-record__errors {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: #fff0f0;
+  border: 1px solid #e8a0a0;
+  border-radius: 3px;
+}
+
+.save-record__error {
+  font-size: 13px;
+  color: #c23030;
+  line-height: 1.5;
+}
+
+/* 响应式适配 */
 @media (max-width: 768px) {
   .records-page__header {
     flex-direction: column;

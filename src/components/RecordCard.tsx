@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Tag, Collapse, Icon } from '@blueprintjs/core';
+import { Button, Tag, Collapse, Icon, Alert, Intent } from '@blueprintjs/core';
 import type { TravelRecord, GearItem } from '../types';
 import { formatWeight } from '../utils/weight';
 
@@ -8,8 +8,10 @@ interface RecordCardProps {
   onDelete: (id: string) => void;
 }
 
+/** 出行记录卡片组件：展示单条出行记录概要信息，支持展开查看详情和删除确认 */
 export function RecordCard({ record, onDelete }: RecordCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<TravelRecord | null>(null);
 
   const itemsByCategory = record.items.reduce<Record<string, GearItem[]>>((acc, item) => {
     if (!acc[item.category]) {
@@ -19,6 +21,18 @@ export function RecordCard({ record, onDelete }: RecordCardProps) {
     return acc;
   }, {});
 
+  const formatTripDate = (dateStr: string): string => {
+    const d = new Date(dateStr + 'T00:00:00');
+    return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+  };
+
+  const handleDeleteConfirm = () => {
+    if (deleteTarget) {
+      onDelete(deleteTarget.id);
+      setDeleteTarget(null);
+    }
+  };
+
   return (
     <div className="record-card">
       <div className="record-card__header">
@@ -26,7 +40,7 @@ export function RecordCard({ record, onDelete }: RecordCardProps) {
           <h3 className="record-card__name">{record.name}</h3>
           <div className="record-card__meta">
             <Tag round>
-              <Icon icon="calendar" size={12} /> {record.tripDate}
+              <Icon icon="calendar" size={12} /> {formatTripDate(record.tripDate)}
             </Tag>
             <Tag round>{record.itemCount} 件</Tag>
             <Tag round intent="primary">
@@ -48,7 +62,7 @@ export function RecordCard({ record, onDelete }: RecordCardProps) {
         >
           {isExpanded ? '收起详情' : '查看详情'}
         </Button>
-        <Button intent="danger" small onClick={() => onDelete(record.id)}>
+        <Button intent="danger" small onClick={() => setDeleteTarget(record)}>
           删除
         </Button>
       </div>
@@ -70,7 +84,7 @@ export function RecordCard({ record, onDelete }: RecordCardProps) {
           <div className="record-card__summary-row">
             <span className="record-card__summary-label">出行日期</span>
             <span className="record-card__summary-value">
-              {record.tripDate}
+              {formatTripDate(record.tripDate)}
             </span>
           </div>
 
@@ -98,6 +112,20 @@ export function RecordCard({ record, onDelete }: RecordCardProps) {
           ))}
         </div>
       </Collapse>
+
+      <Alert
+        cancelButtonText="取消"
+        confirmButtonText="确认删除"
+        icon="trash"
+        intent={Intent.DANGER}
+        isOpen={deleteTarget !== null}
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={handleDeleteConfirm}
+      >
+        <p>
+          确定要删除出行记录「{deleteTarget?.name}」吗？删除后无法恢复。
+        </p>
+      </Alert>
     </div>
   );
 }
