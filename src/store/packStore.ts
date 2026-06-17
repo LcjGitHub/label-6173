@@ -107,6 +107,10 @@ export const usePackStore = create<PackState>()(
         set({
           customGear: get().customGear.filter((g) => g.id !== id),
           selectedIds: get().selectedIds.filter((sid) => sid !== id),
+          templates: get().templates.map((t) => ({
+            ...t,
+            selectedIds: t.selectedIds.filter((sid) => sid !== id),
+          })),
         });
       },
     }),

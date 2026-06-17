@@ -7,6 +7,7 @@ import { formatWeight } from '../utils/weight';
 
 const mockGear = gearData as GearItem[];
 
+/** 模板管理页面：查看、加载、删除模板 */
 export function TemplatesPage() {
   const templates = usePackStore((s) => s.templates);
   const customGear = usePackStore((s) => s.customGear);

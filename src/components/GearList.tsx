@@ -1,4 +1,4 @@
-import { Checkbox } from '@blueprintjs/core';
+import { Checkbox, Tag } from '@blueprintjs/core';
 import type { GearItem } from '../types';
 import { formatWeight } from '../utils/weight';
 
@@ -26,7 +26,12 @@ export function GearList({ items, selectedIds, onToggle }: GearListProps) {
               <div key={item.id} className="gear-list__item">
                 <Checkbox
                   checked={selectedIds.has(item.id)}
-                  label={item.name}
+                  labelElement={
+                    <span className="gear-list__label">
+                      {item.name}
+                      {item.isCustom && <Tag className="gear-list__custom-tag" minimal intent="warning">自定义</Tag>}
+                    </span>
+                  }
                   onChange={() => onToggle(item.id)}
                 />
                 <span className="gear-list__weight">{formatWeight(item.weight)}</span>

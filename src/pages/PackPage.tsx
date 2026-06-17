@@ -10,6 +10,7 @@ import { SaveTemplateForm } from '../components/SaveTemplateForm';
 
 const mockGear = gearData as GearItem[];
 
+/** 打包页面：装备勾选 + 实时汇总 + 保存模板 */
 export function PackPage() {
   const selectedIds = usePackStore((s) => s.selectedIds);
   const customGear = usePackStore((s) => s.customGear);

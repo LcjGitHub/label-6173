@@ -4,6 +4,7 @@ import { PackPage } from './pages/PackPage';
 import { TemplatesPage } from './pages/TemplatesPage';
 import { CustomGearPage } from './pages/CustomGearPage';
 
+/** 根组件：路由配置 */
 export function App() {
   return (
     <BrowserRouter>

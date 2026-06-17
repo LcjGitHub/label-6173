@@ -113,6 +113,17 @@ body {
   color: #738694;
 }
 
+.gear-list__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gear-list__custom-tag {
+  font-size: 11px;
+  line-height: 1;
+}
+
 /* Weight Summary */
 .weight-summary {
   background: #fff;
@@ -299,6 +310,16 @@ body {
 
 .custom-gear-form__row .bp5-html-select {
   min-width: 100px;
+}
+
+.custom-gear-form__errors {
+  margin-top: 8px;
+}
+
+.custom-gear-form__error {
+  font-size: 13px;
+  color: #c23030;
+  line-height: 1.5;
 }
 
 .custom-gear-page__list {
