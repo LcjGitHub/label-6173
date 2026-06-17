@@ -6,7 +6,7 @@ import { usePackStore } from '../store/packStore';
 export function SaveTemplateForm() {
   const [name, setName] = useState('');
   const saveTemplate = usePackStore((s) => s.saveTemplate);
-  const selectedCount = usePackStore((s) => s.selectedIds.length);
+  const selectedCount = usePackStore((s) => s.selectedItems.length);
 
   const handleSave = () => {
     if (!name.trim() || selectedCount === 0) return;

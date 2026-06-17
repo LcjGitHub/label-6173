@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Button, Tag, Collapse, Icon, Alert, Intent } from '@blueprintjs/core';
-import type { TravelRecord, GearItem } from '../types';
-import { formatWeight } from '../utils/weight';
+import type { TravelRecord, SelectedGearDetail } from '../types';
+import { formatWeight, calcTotalItemCount, groupDetailsByCategory } from '../utils/weight';
 
 interface RecordCardProps {
   record: TravelRecord;
@@ -13,13 +13,18 @@ export function RecordCard({ record, onDelete }: RecordCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<TravelRecord | null>(null);
 
-  const itemsByCategory = record.items.reduce<Record<string, GearItem[]>>((acc, item) => {
-    if (!acc[item.category]) {
-      acc[item.category] = [];
+  const itemsByCategory = useMemo(
+    () => groupDetailsByCategory(record.items),
+    [record.items],
+  );
+
+  const categoryItemCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const [category, details] of Object.entries(itemsByCategory)) {
+      counts[category] = calcTotalItemCount(details);
     }
-    acc[item.category].push(item);
-    return acc;
-  }, {});
+    return counts;
+  }, [itemsByCategory]);
 
   const formatTripDate = (dateStr: string): string => {
     const d = new Date(dateStr + 'T00:00:00');
@@ -90,20 +95,25 @@ export function RecordCard({ record, onDelete }: RecordCardProps) {
 
           <h4 className="record-card__section-title">装备清单</h4>
 
-          {Object.entries(itemsByCategory).map(([category, items]) => (
+          {Object.entries(itemsByCategory).map(([category, details]) => (
             <div key={category} className="record-card__category">
               <h5 className="record-card__category-title">
                 {category}
                 <Tag minimal round className="record-card__category-count">
-                  {items.length} 件
+                  {categoryItemCounts[category]} 件
                 </Tag>
               </h5>
               <div className="record-card__category-items">
-                {items.map((item) => (
-                  <div key={item.id} className="record-card__item">
-                    <span className="record-card__item-name">{item.name}</span>
+                {details.map((detail: SelectedGearDetail) => (
+                  <div key={detail.gear.id} className="record-card__item">
+                    <span className="record-card__item-name">
+                      {detail.gear.name}
+                      <Tag minimal className="record-card__item-quantity">
+                        ×{detail.quantity}
+                      </Tag>
+                    </span>
                     <span className="record-card__item-weight">
-                      {formatWeight(item.weight)}
+                      {formatWeight(detail.totalWeight)}
                     </span>
                   </div>
                 ))}

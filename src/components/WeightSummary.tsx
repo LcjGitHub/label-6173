@@ -1,16 +1,16 @@
 import { Tag } from '@blueprintjs/core';
-import type { GearItem } from '../types';
-import { formatWeight } from '../utils/weight';
+import type { SelectedGearDetail } from '../types';
+import { formatWeight, calcTotalWeightWithQuantity, calcTotalItemCount } from '../utils/weight';
 
 interface WeightSummaryProps {
-  /** 已选装备列表 */
-  selectedItems: GearItem[];
+  /** 已选装备详情列表（包含数量） */
+  selectedDetails: SelectedGearDetail[];
 }
 
 /** 实时重量汇总面板 */
-export function WeightSummary({ selectedItems }: WeightSummaryProps) {
-  const total = selectedItems.reduce((sum, item) => sum + item.weight, 0);
-  const count = selectedItems.length;
+export function WeightSummary({ selectedDetails }: WeightSummaryProps) {
+  const total = calcTotalWeightWithQuantity(selectedDetails);
+  const count = calcTotalItemCount(selectedDetails);
 
   return (
     <div className="weight-summary">
@@ -22,12 +22,19 @@ export function WeightSummary({ selectedItems }: WeightSummaryProps) {
         <span className="weight-summary__label">总重量</span>
         <span className="weight-summary__value">{formatWeight(total)}</span>
       </div>
-      {selectedItems.length > 0 && (
+      {selectedDetails.length > 0 && (
         <div className="weight-summary__breakdown">
-          {selectedItems.map((item) => (
-            <div key={item.id} className="weight-summary__item">
-              <span>{item.name}</span>
-              <Tag minimal>{formatWeight(item.weight)}</Tag>
+          {selectedDetails.map((detail) => (
+            <div key={detail.gear.id} className="weight-summary__item">
+              <span className="weight-summary__item-name">
+                {detail.gear.name}
+                <Tag minimal className="weight-summary__item-quantity">
+                  ×{detail.quantity}
+                </Tag>
+              </span>
+              <Tag minimal className="weight-summary__item-weight">
+                {formatWeight(detail.totalWeight)}
+              </Tag>
             </div>
           ))}
         </div>

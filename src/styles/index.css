@@ -230,6 +230,69 @@ body {
   font-size: 14px;
 }
 
+.selected-list__drag-handle {
+  cursor: grab;
+  display: flex;
+  align-items: center;
+}
+
+.selected-list__quantity {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.selected-list__quantity-input {
+  width: 60px;
+}
+
+.selected-list__quantity-label {
+  font-size: 13px;
+  color: #5c7080;
+}
+
+.selected-list__weight {
+  min-width: 70px;
+  text-align: right;
+}
+
+/* Weight Summary Quantity */
+.weight-summary__item-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.weight-summary__item-quantity {
+  font-size: 11px;
+}
+
+.weight-summary__item-weight {
+  min-width: 70px;
+  text-align: right;
+}
+
+/* Record Card Quantity */
+.record-card__item-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.record-card__item-quantity {
+  font-size: 11px;
+}
+
+/* Print Preview Quantity */
+.print-preview__table-col--quantity {
+  width: 80px;
+  text-align: center;
+}
+
+.print-preview__quantity {
+  text-align: center;
+}
+
 /* Save Template */
 .save-template {
   display: flex;

@@ -3,7 +3,7 @@ import { Button, Tag } from '@blueprintjs/core';
 import gearData from '../mock/gear.json';
 import type { GearItem } from '../types';
 import { usePackStore } from '../store/packStore';
-import { formatWeight } from '../utils/weight';
+import { formatWeight, getTemplateDetails, calcTotalWeightWithQuantity, calcTotalItemCount } from '../utils/weight';
 
 const mockGear = gearData as GearItem[];
 
@@ -19,11 +19,10 @@ export function TemplatesPage() {
   const templateDetails = useMemo(
     () =>
       templates.map((tpl) => {
-        const items = tpl.selectedIds
-          .map((id) => allGear.find((g) => g.id === id))
-          .filter((g): g is GearItem => g !== undefined);
-        const totalWeight = items.reduce((sum, g) => sum + g.weight, 0);
-        return { ...tpl, items, totalWeight };
+        const details = getTemplateDetails(tpl, allGear);
+        const totalWeight = calcTotalWeightWithQuantity(details);
+        const itemCount = calcTotalItemCount(details);
+        return { ...tpl, details, totalWeight, itemCount };
       }),
     [templates, allGear],
   );
@@ -48,7 +47,7 @@ export function TemplatesPage() {
             <div className="template-card__header">
               <h3 className="template-card__name">{tpl.name}</h3>
               <div className="template-card__meta">
-                <Tag round>{tpl.items.length} 件</Tag>
+                <Tag round>{tpl.itemCount} 件</Tag>
                 <Tag round intent="primary">{formatWeight(tpl.totalWeight)}</Tag>
               </div>
             </div>
@@ -56,8 +55,10 @@ export function TemplatesPage() {
               创建于 {new Date(tpl.createdAt).toLocaleString('zh-CN')}
             </p>
             <div className="template-card__items">
-              {tpl.items.map((item) => (
-                <Tag key={item.id} minimal>{item.name}</Tag>
+              {tpl.details.map((detail) => (
+                <Tag key={detail.gear.id} minimal>
+                  {detail.gear.name} ×{detail.quantity}
+                </Tag>
               ))}
             </div>
             <div className="template-card__actions">

@@ -4,6 +4,7 @@ import { Button } from '@blueprintjs/core';
 import gearData from '../mock/gear.json';
 import type { GearItem } from '../types';
 import { usePackStore } from '../store/packStore';
+import { getSelectedDetails } from '../utils/weight';
 import { PrintPreviewLayout } from '../components/PrintPreviewLayout';
 import '../styles/print.css';
 
@@ -17,23 +18,20 @@ const mockGear = gearData as GearItem[];
  */
 export function PrintPreviewPage() {
   const navigate = useNavigate();
-  const selectedIds = usePackStore((s) => s.selectedIds);
+  const selectedItems = usePackStore((s) => s.selectedItems);
   const customGear = usePackStore((s) => s.customGear);
 
   /** 所有装备（系统装备 + 自定义装备） */
   const allGear = useMemo(() => [...mockGear, ...customGear], [customGear]);
 
-  /** 已选装备列表（按拖拽顺序排列） */
-  const selectedItems = useMemo(
-    () =>
-      selectedIds
-        .map((id) => allGear.find((g) => g.id === id))
-        .filter((g): g is GearItem => g !== undefined),
-    [selectedIds, allGear],
+  /** 已选装备详情列表（按拖拽顺序排列，包含数量） */
+  const selectedDetails = useMemo(
+    () => getSelectedDetails(selectedItems, allGear),
+    [selectedItems, allGear],
   );
 
   /** 是否已选装备（用于控制按钮禁用状态） */
-  const hasItems = selectedItems.length > 0;
+  const hasItems = selectedDetails.length > 0;
 
   /** 触发浏览器打印 */
   const handlePrint = () => {
@@ -61,7 +59,7 @@ export function PrintPreviewPage() {
           打印清单
         </Button>
       </div>
-      <PrintPreviewLayout items={selectedItems} />
+      <PrintPreviewLayout details={selectedDetails} />
     </div>
   );
 }

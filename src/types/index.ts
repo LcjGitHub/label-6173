@@ -7,6 +7,24 @@ export interface GearItem {
   isCustom?: boolean;
 }
 
+/** 已选装备条目（包含数量） */
+export interface SelectedGearEntry {
+  /** 装备 ID */
+  id: string;
+  /** 数量 */
+  quantity: number;
+}
+
+/** 已选装备详情（包含装备信息和数量） */
+export interface SelectedGearDetail {
+  /** 装备信息 */
+  gear: GearItem;
+  /** 数量 */
+  quantity: number;
+  /** 折算重量（单件重量 × 数量） */
+  totalWeight: number;
+}
+
 /** 自定义装备表单数据 */
 export interface CustomGearFormData {
   name: string;
@@ -18,7 +36,8 @@ export interface CustomGearFormData {
 export interface PackTemplate {
   id: string;
   name: string;
-  selectedIds: string[];
+  /** 已选装备列表（包含数量） */
+  selectedItems: SelectedGearEntry[];
   createdAt: string;
 }
 
@@ -92,11 +111,11 @@ export interface TravelRecord {
   name: string;
   /** 出行日期 */
   tripDate: string;
-  /** 装备清单快照（完整对象，而非仅 ID） */
-  items: GearItem[];
+  /** 装备清单快照（包含数量） */
+  items: SelectedGearDetail[];
   /** 总重量（克） */
   totalWeight: number;
-  /** 装备件数 */
+  /** 装备件数（按数量累加） */
   itemCount: number;
   /** 记录创建时间 */
   createdAt: string;

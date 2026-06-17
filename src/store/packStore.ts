@@ -1,10 +1,19 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { GearItem, PackTemplate, CustomGearFormData, BudgetConfig, TravelRecord, SaveRecordFormData } from '../types';
+import type {
+  GearItem,
+  PackTemplate,
+  CustomGearFormData,
+  BudgetConfig,
+  TravelRecord,
+  SaveRecordFormData,
+  SelectedGearEntry,
+  SelectedGearDetail,
+} from '../types';
 
 interface PackState {
-  /** 当前勾选的装备 ID 列表 */
-  selectedIds: string[];
+  /** 当前勾选的装备列表（包含数量） */
+  selectedItems: SelectedGearEntry[];
   /** 已保存的模板列表 */
   templates: PackTemplate[];
   /** 自定义装备列表 */
@@ -15,8 +24,10 @@ interface PackState {
   travelRecords: TravelRecord[];
   /** 勾选/取消勾选装备 */
   toggleGear: (id: string) => void;
-  /** 设置勾选列表（用于加载模板） */
-  setSelectedIds: (ids: string[]) => void;
+  /** 设置已选装备列表（用于加载模板） */
+  setSelectedItems: (items: SelectedGearEntry[]) => void;
+  /** 设置装备数量 */
+  setQuantity: (id: string, quantity: number) => void;
   /** 清空勾选 */
   clearSelection: () => void;
   /** 更新勾选顺序（拖拽排序） */
@@ -58,30 +69,44 @@ const getDefaultBudgetConfig = (): BudgetConfig => ({
 export const usePackStore = create<PackState>()(
   persist(
     (set, get) => ({
-      selectedIds: [],
+      selectedItems: [],
       templates: [],
       customGear: [],
       budgetConfig: getDefaultBudgetConfig(),
       travelRecords: [],
 
       toggleGear: (id) => {
-        const { selectedIds } = get();
-        if (selectedIds.includes(id)) {
-          set({ selectedIds: selectedIds.filter((i) => i !== id) });
+        const { selectedItems } = get();
+        const existingIndex = selectedItems.findIndex((item) => item.id === id);
+        if (existingIndex !== -1) {
+          set({
+            selectedItems: selectedItems.filter((_, index) => index !== existingIndex),
+          });
         } else {
-          set({ selectedIds: [...selectedIds, id] });
+          set({
+            selectedItems: [...selectedItems, { id, quantity: 1 }],
+          });
         }
       },
 
-      setSelectedIds: (ids) => set({ selectedIds: ids }),
+      setSelectedItems: (items) => set({ selectedItems: items }),
 
-      clearSelection: () => set({ selectedIds: [] }),
+      setQuantity: (id, quantity) => {
+        const safeQuantity = Math.max(1, Math.floor(quantity) || 1);
+        const { selectedItems } = get();
+        const newItems = selectedItems.map((item) =>
+          item.id === id ? { ...item, quantity: safeQuantity } : item,
+        );
+        set({ selectedItems: newItems });
+      },
+
+      clearSelection: () => set({ selectedItems: [] }),
 
       reorderSelected: (fromIndex, toIndex) => {
-        const ids = [...get().selectedIds];
-        const [removed] = ids.splice(fromIndex, 1);
-        ids.splice(toIndex, 0, removed);
-        set({ selectedIds: ids });
+        const items = [...get().selectedItems];
+        const [removed] = items.splice(fromIndex, 1);
+        items.splice(toIndex, 0, removed);
+        set({ selectedItems: items });
       },
 
       saveTemplate: (name) => {
@@ -90,7 +115,7 @@ export const usePackStore = create<PackState>()(
         const template: PackTemplate = {
           id: `tpl-${Date.now()}`,
           name: trimmed,
-          selectedIds: [...get().selectedIds],
+          selectedItems: [...get().selectedItems],
           createdAt: new Date().toISOString(),
         };
         set({ templates: [...get().templates, template] });
@@ -103,7 +128,7 @@ export const usePackStore = create<PackState>()(
       loadTemplate: (id) => {
         const template = get().templates.find((t) => t.id === id);
         if (template) {
-          set({ selectedIds: [...template.selectedIds] });
+          set({ selectedItems: [...template.selectedItems] });
         }
       },
 
@@ -131,10 +156,10 @@ export const usePackStore = create<PackState>()(
       deleteCustomGear: (id) => {
         set({
           customGear: get().customGear.filter((g) => g.id !== id),
-          selectedIds: get().selectedIds.filter((sid) => sid !== id),
+          selectedItems: get().selectedItems.filter((item) => item.id !== id),
           templates: get().templates.map((t) => ({
             ...t,
-            selectedIds: t.selectedIds.filter((sid) => sid !== id),
+            selectedItems: t.selectedItems.filter((item) => item.id !== id),
           })),
         });
       },
@@ -176,18 +201,29 @@ export const usePackStore = create<PackState>()(
       saveTravelRecord: (data, allGear) => {
         const trimmedName = data.name.trim();
         if (!trimmedName || !data.tripDate) return;
-        const selectedIds = get().selectedIds;
-        const selectedItems = selectedIds
-          .map((id) => allGear.find((g) => g.id === id))
-          .filter((g): g is GearItem => g !== undefined);
-        const totalWeight = selectedItems.reduce((sum, g) => sum + g.weight, 0);
+        const selectedItems = get().selectedItems;
+        const selectedDetails: SelectedGearDetail[] = selectedItems
+          .map((entry) => {
+            const gear = allGear.find((g) => g.id === entry.id);
+            if (!gear) return null;
+            return {
+              gear,
+              quantity: entry.quantity,
+              totalWeight: gear.weight * entry.quantity,
+            };
+          })
+          .filter((d): d is SelectedGearDetail => d !== null);
+
+        const totalWeight = selectedDetails.reduce((sum, d) => sum + d.totalWeight, 0);
+        const itemCount = selectedDetails.reduce((sum, d) => sum + d.quantity, 0);
+
         const record: TravelRecord = {
           id: `rec-${Date.now()}`,
           name: trimmedName,
           tripDate: data.tripDate,
-          items: [...selectedItems],
+          items: selectedDetails,
           totalWeight,
-          itemCount: selectedItems.length,
+          itemCount,
           createdAt: new Date().toISOString(),
         };
         set({ travelRecords: [...get().travelRecords, record] });
@@ -199,6 +235,34 @@ export const usePackStore = create<PackState>()(
     }),
     {
       name: 'camping-pack-storage',
+      migrate: (persistedState: unknown, version: number) => {
+        const state = persistedState as Record<string, unknown>;
+        if (version === 0 && state.selectedIds && Array.isArray(state.selectedIds)) {
+          const migratedItems = (state.selectedIds as string[]).map((id) => ({
+            id,
+            quantity: 1,
+          }));
+          state.selectedItems = migratedItems;
+          delete state.selectedIds;
+
+          if (state.templates && Array.isArray(state.templates)) {
+            interface OldPackTemplate {
+              selectedIds?: string[];
+            }
+            state.templates = (state.templates as (PackTemplate & OldPackTemplate)[]).map((tpl) => {
+              if (tpl.selectedIds && Array.isArray(tpl.selectedIds)) {
+                return {
+                  ...tpl,
+                  selectedItems: tpl.selectedIds.map((id: string) => ({ id, quantity: 1 })),
+                };
+              }
+              return tpl;
+            });
+          }
+        }
+        return state;
+      },
+      version: 1,
     },
   ),
 );

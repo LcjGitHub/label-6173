@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Button, InputGroup, Label, FormGroup, Callout } from '@blueprintjs/core';
 import type { GearItem } from '../types';
 import { usePackStore } from '../store/packStore';
-import { formatWeight } from '../utils/weight';
+import { formatWeight, getSelectedDetails, calcTotalWeightWithQuantity, calcTotalItemCount } from '../utils/weight';
 
 interface SaveRecordFormProps {
   allGear: GearItem[];
@@ -16,14 +16,17 @@ export function SaveRecordForm({ allGear }: SaveRecordFormProps) {
   const [attempted, setAttempted] = useState(false);
 
   const saveTravelRecord = usePackStore((s) => s.saveTravelRecord);
-  const selectedIds = usePackStore((s) => s.selectedIds);
+  const selectedItems = usePackStore((s) => s.selectedItems);
 
-  const totalWeight = selectedIds.reduce((sum, id) => {
-    const gear = allGear.find((g) => g.id === id);
-    return sum + (gear?.weight || 0);
-  }, 0);
+  const selectedDetails = useMemo(
+    () => getSelectedDetails(selectedItems, allGear),
+    [selectedItems, allGear],
+  );
 
-  const hasNoSelection = selectedIds.length === 0;
+  const totalWeight = calcTotalWeightWithQuantity(selectedDetails);
+  const totalItemCount = calcTotalItemCount(selectedDetails);
+
+  const hasNoSelection = selectedItems.length === 0;
   const isNameEmpty = !name.trim();
   const isDateEmpty = !tripDate;
 
@@ -79,10 +82,10 @@ export function SaveRecordForm({ allGear }: SaveRecordFormProps) {
             />
           </Label>
         </div>
-        {selectedIds.length > 0 && (
+        {selectedItems.length > 0 && (
           <div className="save-record__summary">
             <span className="save-record__summary-item">
-              共 <strong>{selectedIds.length}</strong> 件装备
+              共 <strong>{totalItemCount}</strong> 件装备
             </span>
             <span className="save-record__summary-item">
               总重 <strong>{formatWeight(totalWeight)}</strong>

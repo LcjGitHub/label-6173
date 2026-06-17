@@ -1,14 +1,14 @@
 import { Tag } from '@blueprintjs/core';
-import type { GearItem, BudgetConfig } from '../types';
+import type { SelectedGearDetail, BudgetConfig } from '../types';
 import {
   formatWeight,
-  calcTotalBudgetUsage,
-  calcCategoryBudgetUsages,
+  calcTotalBudgetUsageWithQuantity,
+  calcCategoryBudgetUsagesWithQuantity,
 } from '../utils/weight';
 
 interface BudgetDisplayProps {
-  /** 已勾选的装备列表 */
-  selectedItems: GearItem[];
+  /** 已勾选的装备详情列表（包含数量） */
+  selectedDetails: SelectedGearDetail[];
   /** 重量预算配置 */
   budgetConfig: BudgetConfig;
 }
@@ -19,9 +19,9 @@ interface BudgetDisplayProps {
  * 超限时对应进度条变为警告色，进度条宽度不封顶以体现超出幅度。
  * 顶栏状态标签在总重超限或任一分类超限时均显示超限警告。
  */
-export function BudgetDisplay({ selectedItems, budgetConfig }: BudgetDisplayProps) {
-  const totalUsage = calcTotalBudgetUsage(selectedItems, budgetConfig);
-  const categoryUsages = calcCategoryBudgetUsages(selectedItems, budgetConfig);
+export function BudgetDisplay({ selectedDetails, budgetConfig }: BudgetDisplayProps) {
+  const totalUsage = calcTotalBudgetUsageWithQuantity(selectedDetails, budgetConfig);
+  const categoryUsages = calcCategoryBudgetUsagesWithQuantity(selectedDetails, budgetConfig);
 
   const hasCategoryOver = categoryUsages.some((c) => c.isOver);
   const isAnyOver = totalUsage.isOver || hasCategoryOver;

@@ -3,6 +3,7 @@ import { Button, InputGroup, FormGroup } from '@blueprintjs/core';
 import gearData from '../mock/gear.json';
 import type { GearItem } from '../types';
 import { usePackStore } from '../store/packStore';
+import { getSelectedDetails } from '../utils/weight';
 import { BudgetDisplay } from '../components/BudgetDisplay';
 
 const mockGear = gearData as GearItem[];
@@ -14,7 +15,7 @@ const mockGear = gearData as GearItem[];
  * 避免清空后无法更新的问题。
  */
 export function BudgetPage() {
-  const selectedIds = usePackStore((s) => s.selectedIds);
+  const selectedItems = usePackStore((s) => s.selectedItems);
   const customGear = usePackStore((s) => s.customGear);
   const budgetConfig = usePackStore((s) => s.budgetConfig);
   const setTotalMaxWeight = usePackStore((s) => s.setTotalMaxWeight);
@@ -23,12 +24,9 @@ export function BudgetPage() {
 
   const allGear = useMemo(() => [...mockGear, ...customGear], [customGear]);
 
-  const selectedItems = useMemo(
-    () =>
-      selectedIds
-        .map((id) => allGear.find((g) => g.id === id))
-        .filter((g): g is GearItem => g !== undefined),
-    [selectedIds, allGear],
+  const selectedDetails = useMemo(
+    () => getSelectedDetails(selectedItems, allGear),
+    [selectedItems, allGear],
   );
 
   const [totalInput, setTotalInput] = useState<string>(budgetConfig.totalMaxWeight.toString());
@@ -123,7 +121,7 @@ export function BudgetPage() {
 
       <div className="budget-page__right">
         <div className="budget-page__sticky">
-          <BudgetDisplay selectedItems={selectedItems} budgetConfig={budgetConfig} />
+          <BudgetDisplay selectedDetails={selectedDetails} budgetConfig={budgetConfig} />
         </div>
       </div>
     </div>
