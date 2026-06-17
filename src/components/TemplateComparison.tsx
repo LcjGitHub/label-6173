@@ -18,8 +18,16 @@ export function TemplateComparison({ result }: TemplateComparisonProps) {
   const categoriesB = Object.keys(groupsB);
 
   const weightDiffAbs = Math.abs(weightDiff);
-  const weightDiffSign = weightDiff > 0 ? '+' : weightDiff < 0 ? '-' : '';
   const diffIntent = weightDiff > 0 ? 'danger' : weightDiff < 0 ? 'success' : 'none';
+
+  let weightDiffText: string;
+  if (weightDiff > 0) {
+    weightDiffText = `模板甲比模板乙重 ${formatWeight(weightDiffAbs)}`;
+  } else if (weightDiff < 0) {
+    weightDiffText = `模板甲比模板乙轻 ${formatWeight(weightDiffAbs)}`;
+  } else {
+    weightDiffText = '两个模板重量相同';
+  }
 
   return (
     <div className="template-comparison">
@@ -78,7 +86,7 @@ export function TemplateComparison({ result }: TemplateComparisonProps) {
           <div className="template-comparison__summary-item">
             <span className="template-comparison__summary-label">重量差值</span>
             <Tag round large intent={diffIntent}>
-              {weightDiffSign}{formatWeight(weightDiffAbs)}
+              {weightDiffText}
             </Tag>
           </div>
         </div>
@@ -102,7 +110,7 @@ export function TemplateComparison({ result }: TemplateComparisonProps) {
 
         <div className="template-comparison__summary-section">
           <h4 className="template-comparison__summary-subtitle">
-            <Tag intent="success">仅 {templateA.name} 独有 ({onlyAItems.length} 件)</Tag>
+            <Tag intent="success">仅模板甲独有 ({onlyAItems.length} 件)</Tag>
           </h4>
           <div className="template-comparison__tags">
             {onlyAItems.length > 0 ? (
@@ -119,7 +127,7 @@ export function TemplateComparison({ result }: TemplateComparisonProps) {
 
         <div className="template-comparison__summary-section">
           <h4 className="template-comparison__summary-subtitle">
-            <Tag intent="warning">仅 {templateB.name} 独有 ({onlyBItems.length} 件)</Tag>
+            <Tag intent="warning">仅模板乙独有 ({onlyBItems.length} 件)</Tag>
           </h4>
           <div className="template-comparison__tags">
             {onlyBItems.length > 0 ? (

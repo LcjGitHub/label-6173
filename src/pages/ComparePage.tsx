@@ -18,8 +18,11 @@ export function ComparePage() {
 
   const allGear = useMemo(() => [...mockGear, ...customGear], [customGear]);
 
+  const isSameTemplate = templateAId && templateBId && templateAId === templateBId;
+
   const comparisonResult = useMemo<TemplateComparisonResult | null>(() => {
     if (!templateAId || !templateBId) return null;
+    if (templateAId === templateBId) return null;
 
     const templateA = templates.find((t) => t.id === templateAId);
     const templateB = templates.find((t) => t.id === templateBId);
@@ -61,7 +64,7 @@ export function ComparePage() {
           </HTMLSelect>
         </div>
 
-        <div className="compare-page__vs">VS</div>
+        <div className="compare-page__vs">对比</div>
 
         <div className="compare-page__selector">
           <label className="compare-page__label">选择模板 B</label>
@@ -80,9 +83,15 @@ export function ComparePage() {
         </div>
       </div>
 
-      {comparisonResult ? (
-        <TemplateComparison result={comparisonResult} />
-      ) : (
+      {isSameTemplate && (
+        <p className="compare-page__warning">
+          请选择两个不同的模板进行对比
+        </p>
+      )}
+
+      {comparisonResult && <TemplateComparison result={comparisonResult} />}
+
+      {!isSameTemplate && !comparisonResult && (
         <p className="compare-page__hint">
           请在上方选择两个模板进行对比
         </p>

@@ -608,6 +608,13 @@ body {
   font-size: 14px;
 }
 
+.compare-page__warning {
+  color: #c23030;
+  font-size: 14px;
+  margin-top: -16px;
+  margin-bottom: 16px;
+}
+
 .compare-page__selectors {
   display: flex;
   align-items: flex-end;
