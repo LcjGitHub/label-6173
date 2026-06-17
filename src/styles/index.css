@@ -84,12 +84,6 @@ body {
   width: 100%;
 }
 
-.pack-page__max-weight-unit {
-  padding: 0 10px;
-  color: #738694;
-  font-size: 13px;
-}
-
 .pack-page__section-header {
   display: flex;
   align-items: center;

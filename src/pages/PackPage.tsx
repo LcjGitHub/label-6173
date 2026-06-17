@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, InputGroup, HTMLSelect, Callout, Intent } from '@blueprintjs/core';
 import gearData from '../mock/gear.json';
@@ -13,22 +13,47 @@ import { SaveRecordForm } from '../components/SaveRecordForm';
 
 const mockGear = gearData as GearItem[];
 
-/** 打包页面：装备勾选 + 实时汇总 + 保存模板 */
+/**
+ * 打包页面：装备勾选 + 实时汇总 + 保存模板
+ * 包含重量上限预警功能：
+ * - 在汇总区域上方提供重量上限设置输入框（单位：克）
+ * - 采用本地编辑态管理输入，避免清空后无法更新的问题
+ * - 输入仅允许非负整数，与预算页的重量预算配置相互独立
+ * - 未设置上限时显示空白占位「未设置上限」且不触发预警
+ * - 总重量超限时汇总面板边框和总重量数字变为警告色，页面顶部显示超出上限提示
+ */
 export function PackPage() {
   const navigate = useNavigate();
   const selectedItems = usePackStore((s) => s.selectedItems);
   const customGear = usePackStore((s) => s.customGear);
-  const budgetConfig = usePackStore((s) => s.budgetConfig);
+  /** 打包页专用的重量上限，与预算页配置独立 */
+  const packPageMaxWeight = usePackStore((s) => s.packPageMaxWeight);
   const toggleGear = usePackStore((s) => s.toggleGear);
   const clearSelection = usePackStore((s) => s.clearSelection);
   const reorderSelected = usePackStore((s) => s.reorderSelected);
   const setQuantity = usePackStore((s) => s.setQuantity);
-  const setTotalMaxWeight = usePackStore((s) => s.setTotalMaxWeight);
+  const setPackPageMaxWeight = usePackStore((s) => s.setPackPageMaxWeight);
 
   /** 装备名称搜索关键词，用于模糊匹配过滤装备列表 */
   const [searchKeyword, setSearchKeyword] = useState('');
   /** 分类筛选值，空字符串表示不筛选，非空时仅显示对应分类 */
   const [categoryFilter, setCategoryFilter] = useState('');
+  /**
+   * 重量上限本地编辑态
+   * 采用字符串类型存储用户输入，与预算页保持一致的编辑模式
+   * 避免直接绑定数值导致清空后无法正常更新的问题
+   */
+  const [maxWeightInput, setMaxWeightInput] = useState<string>(
+    packPageMaxWeight > 0 ? packPageMaxWeight.toString() : '',
+  );
+
+  /**
+   * 当 store 中的重量上限发生变化时同步到本地输入态
+   * 确保外部修改（如模板加载、数据迁移等）能正确反映到输入框
+   */
+  useEffect(() => {
+    setMaxWeightInput(packPageMaxWeight > 0 ? packPageMaxWeight.toString() : '');
+  }, [packPageMaxWeight]);
 
   const allGear = useMemo(() => [...mockGear, ...customGear], [customGear]);
 
@@ -53,17 +78,28 @@ export function PackPage() {
     [selectedDetails],
   );
 
-  const isOverWeight = budgetConfig.totalMaxWeight > 0 && totalWeight > budgetConfig.totalMaxWeight;
+  /**
+   * 超重判断逻辑
+   * 仅当设置了有效上限（> 0）且当前总重量超过上限时才判定为超重
+   * 未设置上限或上限为 0 时不触发预警
+   */
+  const isOverWeight = packPageMaxWeight > 0 && totalWeight > packPageMaxWeight;
 
-  const handleMaxWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value === '') {
-      setTotalMaxWeight(0);
+  /**
+   * 处理重量上限输入变化
+   * 仅允许非负整数输入，空值表示取消上限设置
+   * 采用本地编辑态 + 同步更新 store 的模式，与预算页保持一致
+   */
+  const handleMaxWeightChange = (value: string) => {
+    setMaxWeightInput(value);
+    const trimmed = value.trim();
+    if (trimmed === '') {
+      setPackPageMaxWeight(0);
       return;
     }
-    const num = parseInt(value, 10);
-    if (!isNaN(num)) {
-      setTotalMaxWeight(num);
+    const num = parseInt(trimmed, 10);
+    if (!isNaN(num) && num >= 0) {
+      setPackPageMaxWeight(num);
     }
   };
 
@@ -76,7 +112,7 @@ export function PackPage() {
           icon="warning-sign"
           title="重量超出上限"
         >
-          当前总重量 {formatWeight(totalWeight)} 已超过设定上限 {formatWeight(budgetConfig.totalMaxWeight)}，请减少装备或调整上限。
+          当前总重量 {formatWeight(totalWeight)} 已超过设定上限 {formatWeight(packPageMaxWeight)}，请减少装备或调整上限。
         </Callout>
       )}
       <div className="pack-page__left">
@@ -131,12 +167,12 @@ export function PackPage() {
             placeholder="未设置上限"
             type="number"
             min={0}
-            value={budgetConfig.totalMaxWeight > 0 ? budgetConfig.totalMaxWeight.toString() : ''}
-            onChange={handleMaxWeightChange}
-            rightElement={<span className="pack-page__max-weight-unit">g</span>}
+            step={1}
+            value={maxWeightInput}
+            onChange={(e) => handleMaxWeightChange(e.target.value)}
           />
         </div>
-        <WeightSummary selectedDetails={selectedDetails} maxWeight={budgetConfig.totalMaxWeight} />
+        <WeightSummary selectedDetails={selectedDetails} maxWeight={packPageMaxWeight} />
 
         <div className="pack-page__section">
           <Button

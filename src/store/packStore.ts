@@ -18,10 +18,12 @@ interface PackState {
   templates: PackTemplate[];
   /** 自定义装备列表 */
   customGear: GearItem[];
-  /** 重量预算配置 */
+  /** 重量预算配置（预算页专用） */
   budgetConfig: BudgetConfig;
   /** 出行记录列表 */
   travelRecords: TravelRecord[];
+  /** 打包页专用的总重量上限（克），与预算页配置独立，0 表示未设置 */
+  packPageMaxWeight: number;
   /** 勾选/取消勾选装备 */
   toggleGear: (id: string) => void;
   /** 设置已选装备列表（用于加载模板） */
@@ -58,6 +60,8 @@ interface PackState {
   saveTravelRecord: (data: SaveRecordFormData, allGear: GearItem[]) => void;
   /** 删除出行记录 */
   deleteTravelRecord: (id: string) => void;
+  /** 设置打包页专用的总重量上限 */
+  setPackPageMaxWeight: (weight: number) => void;
 }
 
 const DEFAULT_CATEGORIES = [
@@ -78,6 +82,7 @@ export const usePackStore = create<PackState>()(
       customGear: [],
       budgetConfig: getDefaultBudgetConfig(),
       travelRecords: [],
+      packPageMaxWeight: 0,
 
       toggleGear: (id) => {
         const { selectedItems } = get();
@@ -258,6 +263,11 @@ export const usePackStore = create<PackState>()(
       deleteTravelRecord: (id) => {
         set({ travelRecords: get().travelRecords.filter((r) => r.id !== id) });
       },
+
+      setPackPageMaxWeight: (weight) => {
+        const safeWeight = Math.max(0, Math.floor(weight) || 0);
+        set({ packPageMaxWeight: safeWeight });
+      },
     }),
     {
       name: 'camping-pack-storage',
@@ -314,9 +324,13 @@ export const usePackStore = create<PackState>()(
           );
         }
 
+        if (version < 3 && state.packPageMaxWeight === undefined) {
+          state.packPageMaxWeight = 0;
+        }
+
         return state;
       },
-      version: 2,
+      version: 3,
     },
   ),
 );
