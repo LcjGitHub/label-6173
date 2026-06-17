@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@blueprintjs/core';
+import { Button, InputGroup, HTMLSelect } from '@blueprintjs/core';
 import gearData from '../mock/gear.json';
 import type { GearItem } from '../types';
 import { usePackStore } from '../store/packStore';
@@ -21,7 +21,15 @@ export function PackPage() {
   const clearSelection = usePackStore((s) => s.clearSelection);
   const reorderSelected = usePackStore((s) => s.reorderSelected);
 
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
+
   const allGear = useMemo(() => [...mockGear, ...customGear], [customGear]);
+
+  const categoryOptions = useMemo(() => {
+    const categories = [...new Set(allGear.map((g) => g.category))];
+    return categories;
+  }, [allGear]);
 
   const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds]);
 
@@ -42,10 +50,35 @@ export function PackPage() {
             清空选择
           </Button>
         </div>
+        <div className="pack-page__filter-bar">
+          <InputGroup
+            className="pack-page__search-input"
+            placeholder="搜索装备名称..."
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            leftIcon="search"
+            round
+          />
+          <HTMLSelect
+            className="pack-page__category-select"
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            minimal
+          >
+            <option value="">全部分类</option>
+            {categoryOptions.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </HTMLSelect>
+        </div>
         <GearList
           items={allGear}
           selectedIds={selectedIdSet}
           onToggle={toggleGear}
+          searchKeyword={searchKeyword}
+          categoryFilter={categoryFilter}
         />
       </div>
 

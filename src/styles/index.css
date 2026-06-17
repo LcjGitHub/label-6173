@@ -87,7 +87,28 @@ body {
   color: #5c7080;
 }
 
+.pack-page__filter-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.pack-page__search-input {
+  flex: 1;
+}
+
+.pack-page__category-select {
+  min-width: 120px;
+}
+
 /* Gear List */
+.gear-list__empty {
+  padding: 40px 0;
+  text-align: center;
+  color: #738694;
+  font-size: 14px;
+}
+
 .gear-list__category {
   margin-bottom: 16px;
 }
