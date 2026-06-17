@@ -55,3 +55,31 @@ export interface CategoryBudgetUsage extends BudgetUsage {
   /** 分类名称 */
   category: string;
 }
+
+/** 模板对比结果 */
+export interface TemplateComparisonResult {
+  /** 模板 A 详情 */
+  templateA: {
+    id: string;
+    name: string;
+    items: GearItem[];
+    totalWeight: number;
+    itemCount: number;
+  };
+  /** 模板 B 详情 */
+  templateB: {
+    id: string;
+    name: string;
+    items: GearItem[];
+    totalWeight: number;
+    itemCount: number;
+  };
+  /** 重量差值（A - B） */
+  weightDiff: number;
+  /** 两模板共有装备 */
+  commonItems: GearItem[];
+  /** 仅模板 A 独有装备 */
+  onlyAItems: GearItem[];
+  /** 仅模板 B 独有装备 */
+  onlyBItems: GearItem[];
+}

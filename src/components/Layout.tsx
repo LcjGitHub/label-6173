@@ -39,6 +39,14 @@ export function Layout() {
           >
             重量预算
           </NavLink>
+          <NavLink
+            to="/compare"
+            className={({ isActive }) =>
+              `layout__nav-link${isActive ? ' layout__nav-link--active' : ''}`
+            }
+          >
+            模板对比
+          </NavLink>
         </nav>
       </header>
       <main className="layout__main">

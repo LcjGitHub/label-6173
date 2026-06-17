@@ -1,4 +1,4 @@
-import type { GearItem, BudgetConfig, BudgetUsage, CategoryBudgetUsage } from '../types';
+import type { GearItem, BudgetConfig, BudgetUsage, CategoryBudgetUsage, PackTemplate, TemplateComparisonResult } from '../types';
 
 /**
  * 将克数格式化为可读重量字符串
@@ -77,4 +77,61 @@ export function calcCategoryBudgetUsages(
       ...calcBudgetUsage(categoryWeight, cat.maxWeight),
     };
   });
+}
+
+/**
+ * 根据模板 ID 获取装备详情列表
+ * @param template - 打包模板
+ * @param allGear - 所有可用装备（包含自定义装备）
+ */
+export function getTemplateItems(template: PackTemplate, allGear: GearItem[]): GearItem[] {
+  return template.selectedIds
+    .map((id) => allGear.find((g) => g.id === id))
+    .filter((g): g is GearItem => g !== undefined);
+}
+
+/**
+ * 对比两个模板，返回详细对比结果
+ * @param templateA - 模板 A
+ * @param templateB - 模板 B
+ * @param allGear - 所有可用装备（包含自定义装备）
+ */
+export function compareTemplates(
+  templateA: PackTemplate,
+  templateB: PackTemplate,
+  allGear: GearItem[],
+): TemplateComparisonResult {
+  const itemsA = getTemplateItems(templateA, allGear);
+  const itemsB = getTemplateItems(templateB, allGear);
+
+  const totalWeightA = calcTotalWeight(itemsA);
+  const totalWeightB = calcTotalWeight(itemsB);
+
+  const idsA = new Set(itemsA.map((i) => i.id));
+  const idsB = new Set(itemsB.map((i) => i.id));
+
+  const commonItems = itemsA.filter((item) => idsB.has(item.id));
+  const onlyAItems = itemsA.filter((item) => !idsB.has(item.id));
+  const onlyBItems = itemsB.filter((item) => !idsA.has(item.id));
+
+  return {
+    templateA: {
+      id: templateA.id,
+      name: templateA.name,
+      items: itemsA,
+      totalWeight: totalWeightA,
+      itemCount: itemsA.length,
+    },
+    templateB: {
+      id: templateB.id,
+      name: templateB.name,
+      items: itemsB,
+      totalWeight: totalWeightB,
+      itemCount: itemsB.length,
+    },
+    weightDiff: totalWeightA - totalWeightB,
+    commonItems,
+    onlyAItems,
+    onlyBItems,
+  };
 }
