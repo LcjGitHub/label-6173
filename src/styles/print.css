@@ -1,9 +1,16 @@
+/* ==========================================================================
+   打印预览页面样式
+   描述：装备清单打印预览的专用样式，包含屏幕显示和打印两种模式
+   ========================================================================== */
+
+/* 页面容器 - 白色背景，全屏高度 */
 .print-preview {
   background: #fff;
   padding: 24px;
   min-height: 100vh;
 }
 
+/* 顶部工具栏 - 包含返回和打印按钮，打印时隐藏 */
 .print-preview__toolbar {
   display: flex;
   gap: 12px;
@@ -12,11 +19,13 @@
   border-bottom: 1px solid #e1e8ed;
 }
 
+/* 内容区域 - 居中对齐，限制最大宽度 */
 .print-preview__content {
   max-width: 800px;
   margin: 0 auto;
 }
 
+/* 页面标题区 */
 .print-preview__header {
   text-align: center;
   margin-bottom: 32px;
@@ -24,6 +33,7 @@
   border-bottom: 2px solid #182026;
 }
 
+/* 主标题 */
 .print-preview__title {
   margin: 0 0 8px;
   font-size: 28px;
@@ -31,12 +41,14 @@
   color: #182026;
 }
 
+/* 副标题（打印日期） */
 .print-preview__subtitle {
   margin: 0;
   font-size: 14px;
   color: #5c7080;
 }
 
+/* 汇总区域 - 三列布局展示关键数据 */
 .print-preview__summary {
   display: flex;
   justify-content: space-between;
@@ -47,10 +59,13 @@
   border-radius: 4px;
 }
 
+/* 单个汇总项 */
 .print-preview__summary-item {
   text-align: center;
+  flex: 1;
 }
 
+/* 汇总项标签 */
 .print-preview__summary-label {
   display: block;
   font-size: 13px;
@@ -58,21 +73,25 @@
   margin-bottom: 4px;
 }
 
+/* 汇总项数值 */
 .print-preview__summary-value {
   font-size: 20px;
   font-weight: 700;
   color: #182026;
 }
 
+/* 高亮数值（总重量） */
 .print-preview__summary-value--highlight {
   color: #137cbd;
   font-size: 24px;
 }
 
+/* 分类区块 */
 .print-preview__category {
   margin-bottom: 24px;
 }
 
+/* 分类标题行 */
 .print-preview__category-header {
   display: flex;
   align-items: baseline;
@@ -82,6 +101,7 @@
   border-bottom: 1px solid #d8e1e8;
 }
 
+/* 分类名称 */
 .print-preview__category-title {
   margin: 0;
   font-size: 16px;
@@ -89,23 +109,42 @@
   color: #182026;
 }
 
+/* 分类元信息（件数、重量） */
 .print-preview__category-meta {
   font-size: 13px;
   color: #5c7080;
 }
 
+/* 装备表格 */
 .print-preview__table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
+/* 表格列宽度定义 */
+.print-preview__table-col--index {
+  width: 60px;
+}
+
+.print-preview__table-col--name {
+  width: auto;
+}
+
+.print-preview__table-col--weight {
+  width: 100px;
+}
+
+/* 表格单元格通用样式 */
 .print-preview__table th,
 .print-preview__table td {
   padding: 8px 12px;
   text-align: left;
   border-bottom: 1px solid #e1e8ed;
+  word-break: break-all;
 }
 
+/* 表头样式 */
 .print-preview__table th {
   font-size: 13px;
   font-weight: 600;
@@ -113,21 +152,43 @@
   background: #f5f8fa;
 }
 
+/* 表格内容单元格 */
 .print-preview__table td {
   font-size: 14px;
   color: #182026;
 }
 
+/* 最后一列（重量列）右对齐 */
 .print-preview__table th:last-child,
 .print-preview__table td:last-child {
   text-align: right;
 }
 
+/* 序号列样式 */
 .print-preview__index {
-  width: 40px;
   color: #738694;
+  font-size: 13px;
 }
 
+/* 装备名称 */
+.print-preview__item-name {
+  margin-right: 6px;
+}
+
+/* 自定义装备标签 */
+.print-preview__custom-tag {
+  font-size: 11px;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+/* 重量列 */
+.print-preview__weight {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 空状态提示 */
 .print-preview__empty {
   text-align: center;
   padding: 48px 24px;
@@ -135,6 +196,7 @@
   font-size: 14px;
 }
 
+/* 页脚汇总 */
 .print-preview__footer {
   margin-top: 48px;
   padding-top: 16px;
@@ -144,39 +206,111 @@
   color: #738694;
 }
 
+/* ==========================================================================
+   响应式 - 窄屏适配（平板及以下）
+   ========================================================================== */
+@media (max-width: 640px) {
+  /* 减少页面内边距 */
+  .print-preview {
+    padding: 16px;
+  }
+
+  /* 汇总区域改为上下排列 */
+  .print-preview__summary {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .print-preview__summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    width: 100%;
+  }
+
+  .print-preview__summary-label {
+    margin-bottom: 0;
+  }
+
+  .print-preview__summary-value {
+    font-size: 16px;
+  }
+
+  .print-preview__summary-value--highlight {
+    font-size: 20px;
+  }
+
+  /* 表格列宽调整 */
+  .print-preview__table-col--index {
+    width: 40px;
+  }
+
+  .print-preview__table-col--weight {
+    width: 80px;
+  }
+
+  .print-preview__table th,
+  .print-preview__table td {
+    padding: 6px 8px;
+    font-size: 13px;
+  }
+
+  /* 标题字号缩小 */
+  .print-preview__title {
+    font-size: 22px;
+  }
+
+  .print-preview__category-title {
+    font-size: 15px;
+  }
+}
+
+/* ==========================================================================
+   打印模式样式
+   ========================================================================== */
 @media print {
+  /* 打印时移除页面边距 */
   .print-preview {
     padding: 0;
   }
 
+  /* 打印时隐藏工具栏 */
   .print-preview__toolbar {
     display: none !important;
   }
 
+  /* 打印时内容占满宽度 */
   .print-preview__content {
     max-width: 100%;
   }
 
+  /* 打印时标题边框用黑色 */
   .print-preview__header {
     border-bottom: 2px solid #000;
   }
 
+  /* 打印时保留汇总区域背景色 */
   .print-preview__summary {
     background: #f5f8fa !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
+  /* 打印时分类标题边框用黑色 */
   .print-preview__category-header {
     border-bottom: 1px solid #000;
   }
 
+  /* 打印时保留表头背景色 */
   .print-preview__table th {
     background: #f5f8fa !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
+  /* 打印时表格边框用黑色 */
   .print-preview__table th,
   .print-preview__table td {
     border-bottom: 1px solid #000;

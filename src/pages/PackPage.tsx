@@ -55,12 +55,12 @@ export function PackPage() {
         <div className="pack-page__section">
           <Button
             intent="primary"
-            icon="print"
+            icon="eye-open"
             fill
             onClick={() => navigate('/print-preview')}
             disabled={selectedIds.length === 0}
           >
-            预览清单并打印
+            预览清单
           </Button>
         </div>
 
