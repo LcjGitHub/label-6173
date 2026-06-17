@@ -355,8 +355,18 @@ body {
 /* Budget Page */
 .budget-page {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 24px;
+  align-items: start;
+}
+
+.budget-page__right {
+  position: relative;
+}
+
+.budget-page__sticky {
+  position: sticky;
+  top: 24px;
 }
 
 .budget-page__section-header {
@@ -388,6 +398,14 @@ body {
 }
 
 .budget-page__category-form {
+  margin-bottom: 0;
+}
+
+.budget-page__category-form .bp5-label {
+  margin-bottom: 4px;
+}
+
+.budget-page__category-form .bp5-form-content {
   margin-bottom: 0;
 }
 
@@ -443,6 +461,9 @@ body {
 
 .budget-display__categories {
   margin-top: 16px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 .budget-display__categories-title {
@@ -452,6 +473,10 @@ body {
   margin-bottom: 12px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  padding-bottom: 4px;
 }
 
 /* Budget Category Item */
@@ -464,17 +489,32 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 6px;
+  gap: 8px;
 }
 
 .budget-category__name {
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-shrink: 0;
+}
+
+.budget-category__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .budget-category__weight {
   font-size: 13px;
   color: #5c7080;
+  white-space: nowrap;
+}
+
+.budget-category__percent {
+  min-width: 60px;
+  text-align: center;
 }
 
 /* Progress Bar */
@@ -491,11 +531,24 @@ body {
   border-radius: 4px;
 }
 
+.budget-bar__track--over {
+  overflow: visible;
+}
+
 .budget-bar {
   height: 100%;
   background: #137cbd;
   border-radius: 6px;
   transition: width 0.3s ease, background 0.3s ease;
+  min-width: 0;
+}
+
+.budget-bar__track--over .budget-bar {
+  border-radius: 6px 0 0 6px;
+}
+
+.budget-bar__track--over.budget-bar__track--small .budget-bar {
+  border-radius: 4px 0 0 4px;
 }
 
 .budget-bar--small {
@@ -506,15 +559,30 @@ body {
   background: #c23030;
 }
 
+.budget-bar__track--over .budget-bar--over {
+  box-shadow: 2px 0 4px rgba(194, 48, 48, 0.3);
+}
+
 /* Responsive */
+@media (max-width: 960px) {
+  .budget-page__category-list {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .pack-page,
   .budget-page {
     grid-template-columns: 1fr;
   }
 
-  .budget-page__category-list {
-    grid-template-columns: 1fr;
+  .budget-page__sticky {
+    position: static;
+  }
+
+  .budget-display__categories {
+    max-height: none;
+    overflow-y: visible;
   }
 
   .layout__header {
