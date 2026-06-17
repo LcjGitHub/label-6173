@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Button, Tag } from '@blueprintjs/core';
+import { Button, Tag, OverlayToaster, Position, Intent } from '@blueprintjs/core';
 import gearData from '../mock/gear.json';
 import type { GearItem } from '../types';
 import { usePackStore } from '../store/packStore';
@@ -8,6 +8,9 @@ import { RenameTemplateDialog } from '../components/RenameTemplateDialog';
 
 const mockGear = gearData as GearItem[];
 
+const toaster = OverlayToaster.create({ position: Position.TOP });
+
+/** 模板管理页面：查看、加载、重命名、复制、删除模板 */
 export function TemplatesPage() {
   const templates = usePackStore((s) => s.templates);
   const customGear = usePackStore((s) => s.customGear);
@@ -72,7 +75,13 @@ export function TemplatesPage() {
               <Button small onClick={() => setRenameTarget({ id: tpl.id, name: tpl.name })}>
                 重命名
               </Button>
-              <Button small onClick={() => copyTemplate(tpl.id)}>
+              <Button
+                small
+                onClick={() => {
+                  copyTemplate(tpl.id);
+                  toaster.show({ message: '模板复制成功', intent: Intent.SUCCESS });
+                }}
+              >
                 复制
               </Button>
               <Button intent="danger" small onClick={() => deleteTemplate(tpl.id)}>

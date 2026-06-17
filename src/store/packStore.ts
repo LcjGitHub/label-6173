@@ -145,7 +145,7 @@ export const usePackStore = create<PackState>()(
         const copy: PackTemplate = {
           id: `tpl-${Date.now()}`,
           name: `${source.name} 副本`,
-          selectedItems: [...source.selectedItems],
+          selectedItems: source.selectedItems.map((item) => ({ ...item })),
           createdAt: new Date().toISOString(),
         };
         set({ templates: [...get().templates, copy] });
