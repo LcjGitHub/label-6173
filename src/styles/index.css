@@ -65,6 +65,31 @@ body {
   gap: 24px;
 }
 
+/* 超重警告提示 */
+.pack-page__overweight-alert {
+  grid-column: 1 / -1;
+  margin-bottom: 0;
+}
+
+/* 重量上限设置 */
+.pack-page__max-weight-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5c7080;
+  margin-bottom: 6px;
+}
+
+.pack-page__max-weight-input {
+  width: 100%;
+}
+
+.pack-page__max-weight-unit {
+  padding: 0 10px;
+  color: #738694;
+  font-size: 13px;
+}
+
 .pack-page__section-header {
   display: flex;
   align-items: center;
@@ -182,6 +207,18 @@ body {
   font-size: 28px;
   font-weight: 700;
   color: #137cbd;
+  transition: color 0.2s ease;
+}
+
+/* 超重警告样式 */
+.weight-summary--over {
+  border-color: #c23030;
+  box-shadow: 0 0 0 1px #c23030, 0 0 8px rgba(194, 48, 48, 0.2);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.weight-summary__value--over {
+  color: #c23030;
 }
 
 /* 分类统计区域容器 */

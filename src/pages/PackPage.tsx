@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, InputGroup, HTMLSelect } from '@blueprintjs/core';
+import { Button, InputGroup, HTMLSelect, Callout, Intent } from '@blueprintjs/core';
 import gearData from '../mock/gear.json';
 import type { GearItem } from '../types';
 import { usePackStore } from '../store/packStore';
-import { getSelectedDetails } from '../utils/weight';
+import { getSelectedDetails, calcTotalWeightWithQuantity, formatWeight } from '../utils/weight';
 import { GearList } from '../components/GearList';
 import { WeightSummary } from '../components/WeightSummary';
 import { SelectedGearList } from '../components/SelectedGearList';
@@ -18,10 +18,12 @@ export function PackPage() {
   const navigate = useNavigate();
   const selectedItems = usePackStore((s) => s.selectedItems);
   const customGear = usePackStore((s) => s.customGear);
+  const budgetConfig = usePackStore((s) => s.budgetConfig);
   const toggleGear = usePackStore((s) => s.toggleGear);
   const clearSelection = usePackStore((s) => s.clearSelection);
   const reorderSelected = usePackStore((s) => s.reorderSelected);
   const setQuantity = usePackStore((s) => s.setQuantity);
+  const setTotalMaxWeight = usePackStore((s) => s.setTotalMaxWeight);
 
   /** 装备名称搜索关键词，用于模糊匹配过滤装备列表 */
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -46,8 +48,37 @@ export function PackPage() {
     [selectedItems, allGear],
   );
 
+  const totalWeight = useMemo(
+    () => calcTotalWeightWithQuantity(selectedDetails),
+    [selectedDetails],
+  );
+
+  const isOverWeight = budgetConfig.totalMaxWeight > 0 && totalWeight > budgetConfig.totalMaxWeight;
+
+  const handleMaxWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === '') {
+      setTotalMaxWeight(0);
+      return;
+    }
+    const num = parseInt(value, 10);
+    if (!isNaN(num)) {
+      setTotalMaxWeight(num);
+    }
+  };
+
   return (
     <div className="pack-page">
+      {isOverWeight && (
+        <Callout
+          className="pack-page__overweight-alert"
+          intent={Intent.DANGER}
+          icon="warning-sign"
+          title="重量超出上限"
+        >
+          当前总重量 {formatWeight(totalWeight)} 已超过设定上限 {formatWeight(budgetConfig.totalMaxWeight)}，请减少装备或调整上限。
+        </Callout>
+      )}
       <div className="pack-page__left">
         <div className="pack-page__section-header">
           <h2>装备库</h2>
@@ -91,7 +122,21 @@ export function PackPage() {
       </div>
 
       <div className="pack-page__right">
-        <WeightSummary selectedDetails={selectedDetails} />
+        <div className="pack-page__section">
+          <label className="pack-page__max-weight-label">
+            重量上限（克）
+          </label>
+          <InputGroup
+            className="pack-page__max-weight-input"
+            placeholder="未设置上限"
+            type="number"
+            min={0}
+            value={budgetConfig.totalMaxWeight > 0 ? budgetConfig.totalMaxWeight.toString() : ''}
+            onChange={handleMaxWeightChange}
+            rightElement={<span className="pack-page__max-weight-unit">g</span>}
+          />
+        </div>
+        <WeightSummary selectedDetails={selectedDetails} maxWeight={budgetConfig.totalMaxWeight} />
 
         <div className="pack-page__section">
           <Button
