@@ -6,12 +6,14 @@ import { CustomGearPage } from './pages/CustomGearPage';
 import { BudgetPage } from './pages/BudgetPage';
 import { ComparePage } from './pages/ComparePage';
 import { RecordsPage } from './pages/RecordsPage';
+import { PrintPreviewPage } from './pages/PrintPreviewPage';
 
 /** 根组件：路由配置 */
 export function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/print-preview" element={<PrintPreviewPage />} />
         <Route element={<Layout />}>
           <Route path="/pack" element={<PackPage />} />
           <Route path="/templates" element={<TemplatesPage />} />

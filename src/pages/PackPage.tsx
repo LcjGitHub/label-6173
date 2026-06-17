@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@blueprintjs/core';
 import gearData from '../mock/gear.json';
 import type { GearItem } from '../types';
@@ -13,6 +14,7 @@ const mockGear = gearData as GearItem[];
 
 /** 打包页面：装备勾选 + 实时汇总 + 保存模板 */
 export function PackPage() {
+  const navigate = useNavigate();
   const selectedIds = usePackStore((s) => s.selectedIds);
   const customGear = usePackStore((s) => s.customGear);
   const toggleGear = usePackStore((s) => s.toggleGear);
@@ -49,6 +51,18 @@ export function PackPage() {
 
       <div className="pack-page__right">
         <WeightSummary selectedItems={selectedItems} />
+
+        <div className="pack-page__section">
+          <Button
+            intent="primary"
+            icon="print"
+            fill
+            onClick={() => navigate('/print-preview')}
+            disabled={selectedIds.length === 0}
+          >
+            预览清单并打印
+          </Button>
+        </div>
 
         <div className="pack-page__section">
           <h3>已选装备（可拖拽排序）</h3>
