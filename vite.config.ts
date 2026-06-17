@@ -6,4 +6,10 @@ export default defineConfig({
   server: {
     port: 8101,
   },
+  test: {
+    globals: true,
+    environment: 'node',
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    exclude: ['node_modules', 'dist'],
+  },
 });
