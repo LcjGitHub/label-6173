@@ -27,11 +27,12 @@ export function GearList({ items, selectedIds, onToggle, searchKeyword = '', cat
   }, [items, searchKeyword, categoryFilter]);
 
   const categories = [...new Set(filteredItems.map((i) => i.category))];
+  const singleCategory = categories.length === 1;
 
   if (filteredItems.length === 0) {
     return (
       <div className="gear-list">
-        <div className="gear-list__empty">暂无装备</div>
+        <div className="gear-list__empty" role="status" aria-live="polite">暂无装备</div>
       </div>
     );
   }
@@ -40,7 +41,7 @@ export function GearList({ items, selectedIds, onToggle, searchKeyword = '', cat
     <div className="gear-list">
       {categories.map((category) => (
         <div key={category} className="gear-list__category">
-          <h3 className="gear-list__category-title">{category}</h3>
+          {!singleCategory && <h3 className="gear-list__category-title">{category}</h3>}
           {filteredItems
             .filter((item) => item.category === category)
             .map((item) => (

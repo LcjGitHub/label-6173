@@ -21,11 +21,14 @@ export function PackPage() {
   const clearSelection = usePackStore((s) => s.clearSelection);
   const reorderSelected = usePackStore((s) => s.reorderSelected);
 
+  /** 装备名称搜索关键词，用于模糊匹配过滤装备列表 */
   const [searchKeyword, setSearchKeyword] = useState('');
+  /** 分类筛选值，空字符串表示不筛选，非空时仅显示对应分类 */
   const [categoryFilter, setCategoryFilter] = useState('');
 
   const allGear = useMemo(() => [...mockGear, ...customGear], [customGear]);
 
+  /** 从全部装备中提取不重复的分类名列表，用于分类下拉选项 */
   const categoryOptions = useMemo(() => {
     const categories = [...new Set(allGear.map((g) => g.category))];
     return categories;
@@ -50,7 +53,9 @@ export function PackPage() {
             清空选择
           </Button>
         </div>
+        {/* 搜索与筛选控件区域：搜索框按名称模糊匹配，分类下拉按分类筛选，两者同时生效 */}
         <div className="pack-page__filter-bar">
+          {/* 搜索输入框：按装备名称模糊匹配过滤列表 */}
           <InputGroup
             className="pack-page__search-input"
             placeholder="搜索装备名称..."
@@ -59,6 +64,7 @@ export function PackPage() {
             leftIcon="search"
             round
           />
+          {/* 分类下拉选择框：按住宿、炊具、服装等分类筛选装备 */}
           <HTMLSelect
             className="pack-page__category-select"
             value={categoryFilter}

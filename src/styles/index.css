@@ -597,6 +597,20 @@ body {
     grid-template-columns: 1fr;
   }
 
+  .pack-page__filter-bar {
+    flex-direction: column;
+  }
+
+  .pack-page__search-input {
+    flex: none;
+    width: 100%;
+  }
+
+  .pack-page__category-select {
+    min-width: 0;
+    width: 100%;
+  }
+
   .budget-page__sticky {
     position: static;
   }
