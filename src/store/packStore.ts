@@ -36,6 +36,10 @@ interface PackState {
   saveTemplate: (name: string) => void;
   /** 删除模板 */
   deleteTemplate: (id: string) => void;
+  /** 重命名模板 */
+  renameTemplate: (id: string, newName: string) => void;
+  /** 复制模板 */
+  copyTemplate: (id: string) => void;
   /** 加载模板到当前勾选 */
   loadTemplate: (id: string) => void;
   /** 添加自定义装备 */
@@ -123,6 +127,28 @@ export const usePackStore = create<PackState>()(
 
       deleteTemplate: (id) => {
         set({ templates: get().templates.filter((t) => t.id !== id) });
+      },
+
+      renameTemplate: (id, newName) => {
+        const trimmed = newName.trim();
+        if (!trimmed) return;
+        set({
+          templates: get().templates.map((t) =>
+            t.id === id ? { ...t, name: trimmed } : t,
+          ),
+        });
+      },
+
+      copyTemplate: (id) => {
+        const source = get().templates.find((t) => t.id === id);
+        if (!source) return;
+        const copy: PackTemplate = {
+          id: `tpl-${Date.now()}`,
+          name: `${source.name} 副本`,
+          selectedItems: [...source.selectedItems],
+          createdAt: new Date().toISOString(),
+        };
+        set({ templates: [...get().templates, copy] });
       },
 
       loadTemplate: (id) => {

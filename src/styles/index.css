@@ -370,6 +370,19 @@ body {
 .template-card__actions {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Rename Template Dialog */
+.rename-template-dialog__body {
+  padding: 16px 20px 20px;
+}
+
+.rename-template-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 /* Custom Gear Page */

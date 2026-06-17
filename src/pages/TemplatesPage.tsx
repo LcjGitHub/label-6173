@@ -1,18 +1,22 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Button, Tag } from '@blueprintjs/core';
 import gearData from '../mock/gear.json';
 import type { GearItem } from '../types';
 import { usePackStore } from '../store/packStore';
 import { formatWeight, getTemplateDetails, calcTotalWeightWithQuantity, calcTotalItemCount } from '../utils/weight';
+import { RenameTemplateDialog } from '../components/RenameTemplateDialog';
 
 const mockGear = gearData as GearItem[];
 
-/** 模板管理页面：查看、加载、删除模板 */
 export function TemplatesPage() {
   const templates = usePackStore((s) => s.templates);
   const customGear = usePackStore((s) => s.customGear);
   const loadTemplate = usePackStore((s) => s.loadTemplate);
   const deleteTemplate = usePackStore((s) => s.deleteTemplate);
+  const renameTemplate = usePackStore((s) => s.renameTemplate);
+  const copyTemplate = usePackStore((s) => s.copyTemplate);
+
+  const [renameTarget, setRenameTarget] = useState<{ id: string; name: string } | null>(null);
 
   const allGear = useMemo(() => [...mockGear, ...customGear], [customGear]);
 
@@ -65,6 +69,12 @@ export function TemplatesPage() {
               <Button intent="primary" small onClick={() => loadTemplate(tpl.id)}>
                 加载到打包
               </Button>
+              <Button small onClick={() => setRenameTarget({ id: tpl.id, name: tpl.name })}>
+                重命名
+              </Button>
+              <Button small onClick={() => copyTemplate(tpl.id)}>
+                复制
+              </Button>
               <Button intent="danger" small onClick={() => deleteTemplate(tpl.id)}>
                 删除
               </Button>
@@ -72,6 +82,14 @@ export function TemplatesPage() {
           </div>
         ))}
       </div>
+      <RenameTemplateDialog
+        isOpen={renameTarget !== null}
+        currentName={renameTarget?.name ?? ''}
+        onClose={() => setRenameTarget(null)}
+        onConfirm={(newName) => {
+          if (renameTarget) renameTemplate(renameTarget.id, newName);
+        }}
+      />
     </div>
   );
 }
